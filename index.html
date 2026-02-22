@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Story</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="password-container">
+        <div class="password-card">
+            <h1 class="password-title">Our Story</h1>
+            
+            <form id="passwordForm" class="password-form" novalidate>
+                <div class="form-group">
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        class="password-input"
+                        placeholder="Enter password"
+                        autocomplete="off"
+                        required
+                        aria-label="Password"
+                    >
+                </div>
+
+                <button type="submit" class="password-button">Enter</button>
+
+                <div id="errorMessage" class="error-message" role="alert" aria-live="polite"></div>
+            </form>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
