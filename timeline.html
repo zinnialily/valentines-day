@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Timeline ♡</title>
+  <style>
+    /* ── Reset & base ─────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: #f9f7f4;
+      font-family: Georgia, 'Times New Roman', serif;
+      color: #8b7355;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      cursor: default;
+    }
+
+    /* ── Page fade-in ─────────────────────────────── */
+    body {
+      animation: pageFadeIn 0.8s ease forwards;
+    }
+    @keyframes pageFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Decorative floating petals ───────────────── */
+    .petals {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .petal {
+      position: absolute;
+      top: -20px;
+      font-size: 14px;
+      opacity: 0;
+      animation: petalFall linear infinite;
+      user-select: none;
+    }
+    .petal:nth-child(1)  { left:  5%; animation-duration: 9s;  animation-delay: 0s;   font-size: 12px; }
+    .petal:nth-child(2)  { left: 15%; animation-duration: 11s; animation-delay: 2s;   font-size: 10px; }
+    .petal:nth-child(3)  { left: 25%; animation-duration: 8s;  animation-delay: 4s;   font-size: 14px; }
+    .petal:nth-child(4)  { left: 35%; animation-duration: 12s; animation-delay: 1s;   font-size: 11px; }
+    .petal:nth-child(5)  { left: 50%; animation-duration: 10s; animation-delay: 3s;   font-size: 13px; }
+    .petal:nth-child(6)  { left: 62%; animation-duration: 9s;  animation-delay: 5.5s; font-size: 10px; }
+    .petal:nth-child(7)  { left: 75%; animation-duration: 13s; animation-delay: 0.5s; font-size: 12px; }
+    .petal:nth-child(8)  { left: 88%; animation-duration: 8s;  animation-delay: 2.5s; font-size: 14px; }
+    @keyframes petalFall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.45; }
+      90%  { opacity: 0.25; }
+      100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ── Page title header ────────────────────────── */
+    .page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      text-align: center;
+      padding: 14px 0 10px;
+      background: linear-gradient(to bottom, rgba(249,247,244,1) 75%, rgba(249,247,244,0));
+      pointer-events: none;
+    }
+    .page-title {
+      font-size: clamp(18px, 2.5vw, 28px);
+      color: #8b7355;
+      letter-spacing: 4px;
+      font-style: italic;
+      text-shadow: 0 1px 3px rgba(139,115,85,0.15);
+    }
+    .page-subtitle {
+      font-size: 11px;
+      color: #c8a4b8;
+      letter-spacing: 2px;
+      margin-top: 3px;
+    }
+
+    /* ── Main horizontal scroll track ────────────── */
+    .timeline-track {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 100vh;
+      white-space: nowrap;
+      padding: 0 120px;
+      padding-top: 70px;  /* clear header */
+    }
+
+    /* ── The horizontal line ──────────────────────── */
+    .timeline-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(to right,
+        transparent 0px,
+        #e8a8c8 80px,
+        #e8a8c8 calc(100% - 80px),
+        transparent 100%
+      );
+      transform: translateY(-50%);
+      z-index: 1;
+    }
+
+    /* ── Section spacer between events ───────────── */
+    .spacer {
+      display: inline-block;
+      width: 80px;
+      flex-shrink: 0;
+    }
+    .spacer-lg {
+      width: 120px;
+    }
+
+    /* ── Connector stem (polaroid to line) ────────── */
+    .event-wrapper {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    /* above-line events: polaroid on top, stem below */
+    .event-wrapper.above {
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    /* below-line events: stem on top, polaroid below */
+    .event-wrapper.below {
+      flex-direction: column-reverse;
+      justify-content: flex-start;
+    }
+
+    .stem {
+      width: 2px;
+      background: #e8a8c8;
+      flex-shrink: 0;
+      transition: height 0.35s ease;
+    }
+    .above .stem { height: 40px; }
+    .below .stem { height: 40px; }
+
+    /* dot on timeline */
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #e8a8c8;
+      border: 3px solid #f9f7f4;
+      box-shadow: 0 0 0 1.5px #e8a8c8, 0 2px 6px rgba(232,168,200,0.35);
+      flex-shrink: 0;
+      z-index: 5;
+    }
+
+    /* ── Polaroid card ────────────────────────────── */
+    .polaroid {
+      background: #ffffff;
+      border-radius: 3px;
+      box-shadow:
+        0 4px 18px rgba(139,115,85,0.13),
+        0 1px 4px rgba(139,115,85,0.09);
+      cursor: pointer;
+      transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease;
+      user-select: none;
+      white-space: normal;
+      width: 160px;
+      flex-shrink: 0;
+    }
+
+    /* Per-card slight rotation */
+    .polaroid.rot-n3 { transform: rotate(-3deg); }
+    .polaroid.rot-n2 { transform: rotate(-2deg); }
+    .polaroid.rot-n1 { transform: rotate(-1deg); }
+    .polaroid.rot-p1 { transform: rotate(1deg); }
+    .polaroid.rot-p2 { transform: rotate(2deg); }
+    .polaroid.rot-p3 { transform: rotate(3deg); }
+
+    .polaroid:hover {
+      box-shadow:
+        0 8px 28px rgba(139,115,85,0.18),
+        0 2px 8px rgba(139,115,85,0.12);
+    }
+
+    /* expanded state */
+    .polaroid.open {
+      transform: rotate(0deg) scale(1.18) !important;
+      box-shadow:
+        0 16px 48px rgba(139,115,85,0.22),
+        0 4px 16px rgba(139,115,85,0.14);
+      z-index: 50;
+    }
+    .polaroid.open-large {
+      transform: rotate(0deg) scale(1.32) !important;
+    }
+    .polaroid.open-medium {
+      transform: rotate(0deg) scale(1.22) !important;
+    }
+
+    /* image area */
+    .polaroid-img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      background: #f0ebe3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: #c8b8a8;
+      border-radius: 2px 2px 0 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .polaroid-img-placeholder {
+      font-size: 11px;
+      color: #c8b8a8;
+      letter-spacing: 1px;
+      text-align: center;
+      line-height: 1.5;
+      padding: 8px;
+    }
+
+    /* text area */
+    .polaroid-body {
+      padding: 10px 10px 12px;
+    }
+    .polaroid-date {
+      font-size: 9px;
+      color: #c8a4b8;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .polaroid-title {
+      font-size: 12px;
+      color: #8b7355;
+      line-height: 1.4;
+      font-style: italic;
+    }
+
+    /* expandable description — hidden by default */
+    .polaroid-desc {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.3s ease;
+      opacity: 0;
+      font-size: 10px;
+      color: #a89070;
+      line-height: 1.55;
+      margin-top: 0;
+    }
+    .polaroid.open .polaroid-desc,
+    .polaroid.open-large .polaroid-desc,
+    .polaroid.open-medium .polaroid-desc {
+      max-height: 120px;
+      opacity: 1;
+      margin-top: 6px;
+    }
+
+    /* special badge */
+    .polaroid-badge {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: #e8a8c8;
+      color: white;
+      font-size: 7px;
+      letter-spacing: 1px;
+      padding: 2px 5px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    /* ── Mini event (on-line) ──────────────────────── */
+    .mini-event {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 10;
+      vertical-align: middle;
+      flex-shrink: 0;
+      cursor: default;
+    }
+    .mini-bubble {
+      background: #fff;
+      border: 1.5px solid #e8a8c8;
+      border-radius: 12px;
+      padding: 5px 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      box-shadow: 0 2px 10px rgba(232,168,200,0.2);
+      white-space: normal;
+      text-align: center;
+      transition: transform 0.2s ease;
+      animation: floatBubble 3s ease-in-out infinite;
+    }
+    .mini-event:hover .mini-bubble {
+      animation: bounceBubble 0.5s ease;
+    }
+    @keyframes floatBubble {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-4px); }
+    }
+    @keyframes bounceBubble {
+      0%   { transform: scale(1) translateY(0); }
+      30%  { transform: scale(1.12) translateY(-6px); }
+      60%  { transform: scale(0.96) translateY(0); }
+      80%  { transform: scale(1.04) translateY(-2px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+    .mini-icon { font-size: 16px; line-height: 1; }
+    .mini-label {
+      font-size: 9px;
+      color: #8b7355;
+      letter-spacing: 0.5px;
+      font-style: italic;
+      max-width: 70px;
+    }
+    .mini-date {
+      font-size: 8px;
+      color: #c8a4b8;
+      letter-spacing: 1px;
+    }
+
+    /* mini events sit on the line via a connector dot */
+    .mini-event .dot {
+      width: 8px;
+      height: 8px;
+      margin-top: 4px;
+    }
+
+    /* ── Scroll hint arrow ────────────────────────── */
+    .scroll-hint {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      color: #e8a8c8;
+      opacity: 0.7;
+      animation: hintPulse 2s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 200;
+    }
+    @keyframes hintPulse {
+      0%, 100% { opacity: 0.4; transform: translateY(-50%) translateX(0); }
+      50%       { opacity: 0.8; transform: translateY(-50%) translateX(5px); }
+    }
+
+    /* ── Mobile responsive ────────────────────────── */
+    @media (max-width: 700px) {
+      .polaroid { width: 120px; }
+      .spacer    { width: 50px; }
+      .spacer-lg { width: 70px; }
+      .polaroid-title { font-size: 10px; }
+      .polaroid.open        { transform: rotate(0deg) scale(1.14) !important; }
+      .polaroid.open-large  { transform: rotate(0deg) scale(1.22) !important; }
+      .polaroid.open-medium { transform: rotate(0deg) scale(1.16) !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating petals -->
+  <div class="petals" aria-hidden="true">
+    <div class="petal">🌸</div>
+    <div class="petal">🌷</div>
+    <div class="petal">🌸</div>
+    <div class="petal">🌸</div>
+    <div class="petal">🌷</div>
+    <div class="petal">🌸</div>
+    <div class="petal">🌷</div>
+    <div class="petal">🌸</div>
+  </div>
+
+  <!-- Fixed page header -->
+  <header class="page-header" aria-label="Page title">
+    <div class="page-title">our story ♡</div>
+    <div class="page-subtitle">jan — mar 2026</div>
+  </header>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint" aria-hidden="true">→</div>
+
+  <!-- Horizontal timeline track -->
+  <div class="timeline-track" role="main">
+
+    <!-- The horizontal line -->
+    <div class="timeline-line" aria-hidden="true"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 1: Jan 1 — First date (ABOVE) -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="spacer"></div>
+
+    <div class="event-wrapper above" data-id="e1">
+      <div class="polaroid rot-n2" id="polaroid-e1" onclick="togglePolaroid('e1', 'normal')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-img-placeholder">🎬<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Jan 1, 2026</div>
+          <div class="polaroid-title">First date at the theaters</div>
+          <div class="polaroid-desc">Marty Supreme — the best way to start the new year. ♡</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 2: Jan 8 — Official (BELOW) [MAJOR] -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper below" data-id="e2">
+      <div class="polaroid rot-p3" id="polaroid-e2" onclick="togglePolaroid('e2', 'large')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-badge">♡ official</div>
+          <div class="polaroid-img-placeholder">🍫<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Jan 8, 2026</div>
+          <div class="polaroid-title">Became official + Hershey's chocolates</div>
+          <div class="polaroid-desc">The rotten Hershey's incident… still the sweetest memory. The day everything changed. ♡</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 3: Jan 15 — Mood Coffee (ABOVE) -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper above" data-id="e3">
+      <div class="polaroid rot-n1" id="polaroid-e3" onclick="togglePolaroid('e3', 'normal')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-img-placeholder">☕<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Jan 15, 2026</div>
+          <div class="polaroid-title">Mood Coffee</div>
+          <div class="polaroid-desc">Tea too hot + hit the curb. A chaotic, perfect afternoon.</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 4: Jan 21 — I Heart Boba (BELOW) -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper below" data-id="e4">
+      <div class="polaroid rot-p1" id="polaroid-e4" onclick="togglePolaroid('e4', 'normal')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-img-placeholder">🧋<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Jan 21, 2026</div>
+          <div class="polaroid-title">I Heart Boba</div>
+          <div class="polaroid-desc">Honey lemon tea (gross). Never again — but we'd go back.</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- MINI EVENT: Feb 2 — Cookie & Mocha (ON LINE) -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="mini-event" data-id="m1">
+      <div class="mini-bubble">
+        <div class="mini-icon">🍪☕</div>
+        <div class="mini-label">Cookie & Mocha</div>
+        <div class="mini-date">Feb 2</div>
+      </div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- MINI EVENT: Feb 6 — Cookies again (ON LINE) -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="mini-event" data-id="m2">
+      <div class="mini-bubble">
+        <div class="mini-icon">🍪</div>
+        <div class="mini-label">Cookies again</div>
+        <div class="mini-date">Feb 6</div>
+      </div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 5: Feb 10 — First Kiss (ABOVE) [SPECIAL] -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper above" data-id="e5">
+      <div class="polaroid rot-n2" id="polaroid-e5" onclick="togglePolaroid('e5', 'medium')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-badge">✨ special</div>
+          <div class="polaroid-img-placeholder">💋<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Feb 10, 2026</div>
+          <div class="polaroid-title">First Kiss</div>
+          <div class="polaroid-desc">A moment to remember forever. ♡</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 6: Feb 17 — First Photos (BELOW) [SPECIAL] -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper below" data-id="e6">
+      <div class="polaroid rot-p2" id="polaroid-e6" onclick="togglePolaroid('e6', 'medium')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-badge">📸 us</div>
+          <div class="polaroid-img-placeholder">📷<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Feb 17, 2026</div>
+          <div class="polaroid-title">First Photos Together</div>
+          <div class="polaroid-desc">Our first pictures as a couple. Keeping these forever.</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer-lg"></div>
+
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- EVENT 7: Mar 9 — Chosen Valentine's (ABOVE) [BIGGEST] -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper above" data-id="e7">
+      <div class="polaroid rot-n1" id="polaroid-e7" onclick="togglePolaroid('e7', 'large')" role="button" aria-expanded="false" tabindex="0">
+        <div class="polaroid-img">
+          <div class="polaroid-badge">♡ our day</div>
+          <div class="polaroid-img-placeholder">🌹<br>photo<br>here</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Mar 9, 2026</div>
+          <div class="polaroid-title">Chosen Valentine's Day</div>
+          <div class="polaroid-desc">2 months + 1 day after official. 21 is his favorite number. Our day, chosen by us. ♡</div>
+        </div>
+      </div>
+      <div class="stem"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="spacer"></div>
+
+  </div><!-- /timeline-track -->
+
+  <script>
+    // Track which polaroid is currently open
+    let currentOpen = null;
+    let currentSize = null;
+
+    // Open/close classes per expand size
+    const sizeClass = {
+      'normal': 'open',
+      'medium': 'open-medium',
+      'large':  'open-large',
+    };
+
+    function togglePolaroid(id, size) {
+      const el = document.getElementById('polaroid-' + id);
+      if (!el) return;
+
+      const openClass = sizeClass[size] || 'open';
+
+      // If clicking the already-open polaroid — close it
+      if (currentOpen === id) {
+        el.classList.remove(openClass);
+        el.setAttribute('aria-expanded', 'false');
+        currentOpen = null;
+        currentSize = null;
+        return;
+      }
+
+      // Close any previously open polaroid
+      if (currentOpen) {
+        const prev = document.getElementById('polaroid-' + currentOpen);
+        if (prev) {
+          prev.classList.remove(sizeClass[currentSize] || 'open');
+          prev.setAttribute('aria-expanded', 'false');
+        }
+      }
+
+      // Open the new one
+      el.classList.add(openClass);
+      el.setAttribute('aria-expanded', 'true');
+      currentOpen = id;
+      currentSize = size;
+    }
+
+    // Keyboard support — Enter/Space triggers click
+    document.querySelectorAll('.polaroid').forEach(card => {
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      });
+    });
+
+    // Close open polaroid on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && currentOpen) {
+        const prev = document.getElementById('polaroid-' + currentOpen);
+        if (prev) {
+          prev.classList.remove(sizeClass[currentSize] || 'open');
+          prev.setAttribute('aria-expanded', 'false');
+        }
+        currentOpen = null;
+        currentSize = null;
+      }
+    });
+
+    // Hide scroll hint after first scroll
+    const hint = document.querySelector('.scroll-hint');
+    let hintHidden = false;
+    document.addEventListener('scroll', () => {
+      if (!hintHidden) {
+        hint.style.opacity = '0';
+        hint.style.transition = 'opacity 0.5s';
+        hintHidden = true;
+      }
+    }, { passive: true });
+    window.addEventListener('scroll', () => {
+      if (!hintHidden) {
+        hint.style.opacity = '0';
+        hint.style.transition = 'opacity 0.5s';
+        hintHidden = true;
+      }
+    }, { passive: true });
+  </script>
+</body>
+</html>
