@@ -10,22 +10,18 @@
 
     html, body {
       width: 100%;
-      height: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
       background: #f9f7f4;
       font-family: Georgia, 'Times New Roman', serif;
       color: #8b7355;
       -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
       cursor: default;
-      min-height: 680px; /* accommodate fixed-height track */
     }
 
     /* ── Page fade-in ─────────────────────────────── */
-    body {
-      animation: pageFadeIn 0.8s ease forwards;
-    }
+    body { animation: pageFadeIn 0.8s ease forwards; }
     @keyframes pageFadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
@@ -64,14 +60,12 @@
 
     /* ── Page title header ────────────────────────── */
     .page-header {
-      position: fixed;
+      position: sticky;
       top: 0;
-      left: 0;
-      right: 0;
       z-index: 100;
       text-align: center;
-      padding: 14px 0 10px;
-      background: linear-gradient(to bottom, rgba(249,247,244,1) 75%, rgba(249,247,244,0));
+      padding: 18px 0 12px;
+      background: linear-gradient(to bottom, rgba(249,247,244,1) 78%, rgba(249,247,244,0));
       pointer-events: none;
     }
     .page-title {
@@ -88,33 +82,19 @@
       margin-top: 3px;
     }
 
-    /* ── Main horizontal scroll track (CSS grid) ─── */
-    .timeline-track {
+    /* ── Grid wrapper ─────────────────────────────── */
+    .grid-wrap {
+      position: relative;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 24px 56px 90px;
+    }
+
+    /* ── 3×3 event grid ───────────────────────────── */
+    .event-grid {
       display: grid;
-      grid-template-rows: repeat(4, 170px);
-      grid-auto-columns: 85px;
-      grid-auto-flow: dense;
-      height: 680px;
-      width: max-content;
-      min-width: 100vw;
-      align-items: stretch;
-      position: relative; /* for doodle-layer */
-    }
-
-    /* ── Event wrapper / mini event — grid items ──── */
-    .event-wrapper,
-    .mini-event {
-      z-index: 2;
-      display: flex;
-      align-items: flex-start;
-    }
-
-    /* ── Doodle layer — absolute over grid ────────── */
-    .doodle-layer {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 60px 44px;
     }
 
     /* ── Polaroid card ────────────────────────────── */
@@ -129,39 +109,34 @@
         transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
         box-shadow 0.35s ease;
       user-select: none;
-      white-space: normal;
-      width: 100%;
-      position: relative; /* for tape pseudo-elements */
+      position: relative;
       display: flex;
       flex-direction: column;
     }
 
-    /* Per-card rotation — more aggressive angles for scrapbook chaos */
-    .polaroid.rot-n3 { transform: rotate(-9deg); }
-    .polaroid.rot-n2 { transform: rotate(-8deg); }
-    .polaroid.rot-n1 { transform: rotate(-4deg); }
-    .polaroid.rot-p1 { transform: rotate(9deg); }
-    .polaroid.rot-p2 { transform: rotate(6deg); }
-    .polaroid.rot-p3 { transform: rotate(5deg); }
+    /* rotations */
+    .rot-n3 { transform: rotate(-9deg); }
+    .rot-n2 { transform: rotate(-7deg); }
+    .rot-n1 { transform: rotate(-3deg); }
+    .rot-p1 { transform: rotate(8deg); }
+    .rot-p2 { transform: rotate(5deg); }
+    .rot-p3 { transform: rotate(11deg); }
 
     .polaroid:hover {
       box-shadow:
-        0 8px 28px rgba(139,115,85,0.18),
-        0 2px 8px rgba(139,115,85,0.12);
+        0 12px 36px rgba(139,115,85,0.2),
+        0 3px 10px rgba(139,115,85,0.12);
+      z-index: 10;
     }
-
 
     /* image area */
     .polaroid-img {
       width: 100%;
-      flex: 1;
-      min-height: 60px;
+      height: 160px;
       background: #f0ebe3;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
-      color: #c8b8a8;
       border-radius: 2px 2px 0 0;
       overflow: hidden;
       position: relative;
@@ -171,34 +146,32 @@
       color: #c8b8a8;
       letter-spacing: 1px;
       text-align: center;
-      line-height: 1.5;
+      line-height: 1.8;
       padding: 8px;
     }
 
     /* text area */
     .polaroid-body {
-      padding: 10px 10px 12px;
+      padding: 12px 14px 16px;
     }
     .polaroid-date {
       font-size: 9px;
       color: #c8a4b8;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
     }
     .polaroid-title {
-      font-size: 12px;
+      font-size: 13px;
       color: #8b7355;
       line-height: 1.4;
       font-style: italic;
     }
-
-    /* description — hidden in grid cards, shown in lightbox via .lightbox-card override */
     .polaroid-desc {
       max-height: 0;
       overflow: hidden;
       opacity: 0;
-      font-size: 10px;
+      font-size: 11px;
       color: #a89070;
       line-height: 1.55;
       margin-top: 0;
@@ -207,108 +180,46 @@
     /* special badge */
     .polaroid-badge {
       position: absolute;
-      top: 6px;
-      right: 6px;
+      top: 8px;
+      right: 8px;
       background: #e8a8c8;
       color: white;
       font-size: 7px;
       letter-spacing: 1px;
-      padding: 2px 5px;
+      padding: 2px 6px;
       border-radius: 8px;
       text-transform: uppercase;
-    }
-
-    /* ── Mini event bubble ────────────────────────── */
-    .mini-bubble {
-      background: #fff;
-      border: 1.5px solid #e8a8c8;
-      border-radius: 12px;
-      padding: 5px 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      box-shadow: 0 2px 10px rgba(232,168,200,0.2);
-      white-space: normal;
-      text-align: center;
-      transition: transform 0.2s ease;
-      animation: floatBubble 3s ease-in-out infinite;
-    }
-    .mini-event:hover .mini-bubble {
-      animation: bounceBubble 0.5s ease;
-    }
-    @keyframes floatBubble {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-4px); }
-    }
-    @keyframes bounceBubble {
-      0%   { transform: scale(1) translateY(0); }
-      30%  { transform: scale(1.12) translateY(-6px); }
-      60%  { transform: scale(0.96) translateY(0); }
-      80%  { transform: scale(1.04) translateY(-2px); }
-      100% { transform: scale(1) translateY(0); }
-    }
-    .mini-icon { font-size: 16px; line-height: 1; }
-    .mini-label {
-      font-size: 9px;
-      color: #8b7355;
-      letter-spacing: 0.5px;
-      font-style: italic;
-      max-width: 70px;
-    }
-    .mini-date {
-      font-size: 8px;
-      color: #c8a4b8;
-      letter-spacing: 1px;
-    }
-
-    /* ── Scroll hint arrow ────────────────────────── */
-    .scroll-hint {
-      position: fixed;
-      right: 24px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 22px;
-      color: #e8a8c8;
-      opacity: 0.7;
-      animation: hintPulse 2s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 200;
-    }
-    @keyframes hintPulse {
-      0%, 100% { opacity: 0.4; transform: translateY(-50%) translateX(0); }
-      50%       { opacity: 0.8; transform: translateY(-50%) translateX(5px); }
     }
 
     /* ── Washi tape strips ────────────────────────── */
     .tape {
       position: absolute;
-      width: 64px;
-      height: 18px;
-      opacity: 0.6;
+      width: 72px;
+      height: 20px;
+      opacity: 0.68;
       border-radius: 2px;
       pointer-events: none;
       z-index: 3;
     }
-    .tape-tl { top: -10px; left: 18px;  transform: rotate(-38deg); }
-    .tape-tr { top: -10px; right: 14px; transform: rotate(34deg);  }
-    .tape-pink     { background: #f0b0c4; }
-    .tape-sage     { background: #b0c4a0; }
-    .tape-cream    { background: #eee0b8; }
-    .tape-lavender { background: #c8b0e0; }
+    .tape-tl { top: -12px; left: 16px;  transform: rotate(-35deg); }
+    .tape-tr { top: -12px; right: 12px; transform: rotate(32deg);  }
+    .tape-bl { bottom: -10px; left: 22px;  transform: rotate(7deg);  }
+    .tape-br { bottom: -10px; right: 16px; transform: rotate(-12deg); }
 
-    /* ── Scatter doodles ──────────────────────────── */
-    .doodle {
+    .tape-pink     { background: repeating-linear-gradient(50deg, #f0b0c4, #f0b0c4 4px, #f9cedd 4px, #f9cedd 8px); }
+    .tape-sage     { background: repeating-linear-gradient(50deg, #b0c4a0, #b0c4a0 4px, #c8dcb8 4px, #c8dcb8 8px); }
+    .tape-cream    { background: repeating-linear-gradient(50deg, #eee0b8, #eee0b8 4px, #f8eece 4px, #f8eece 8px); }
+    .tape-lavender { background: repeating-linear-gradient(50deg, #c8b0e0, #c8b0e0 4px, #dccff0 4px, #dccff0 8px); }
+    .tape-blue     { background: repeating-linear-gradient(50deg, #a8c8e8, #a8c8e8 4px, #c0dcf4 4px, #c0dcf4 8px); }
+
+    /* ── Scattered stickers ───────────────────────── */
+    .sticker {
       position: absolute;
-      z-index: 1;
       pointer-events: none;
-      color: #c9a89a;
-      font-size: 14px;
-      opacity: 0.5;
       user-select: none;
+      z-index: 5;
+      line-height: 1;
     }
-    .doodle-lg { font-size: 20px; }
-    .doodle-sm { font-size: 10px; opacity: 0.32; }
 
     /* ── Lightbox overlay ─────────────────────────── */
     .gallery-overlay {
@@ -336,17 +247,22 @@
     .lightbox-card .polaroid {
       width: 100%;
       cursor: default;
+      transform: none !important;
     }
+    .lightbox-card .polaroid-img { height: 220px; }
     .lightbox-card .polaroid-desc {
       max-height: 200px !important;
       opacity: 1 !important;
-      margin-top: 6px !important;
+      margin-top: 8px !important;
     }
 
     /* ── Mobile responsive ────────────────────────── */
     @media (max-width: 700px) {
-      .polaroid-title { font-size: 10px; }
-      .lightbox-card { transform: rotate(-1deg); }
+      .event-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 28px; }
+      .grid-wrap  { padding: 16px 28px 64px; }
+    }
+    @media (max-width: 460px) {
+      .event-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -364,39 +280,56 @@
     <div class="petal">🌸</div>
   </div>
 
-  <!-- Fixed page header -->
+  <!-- Page header -->
   <header class="page-header" aria-label="Page title">
     <div class="page-title">our story ♡</div>
     <div class="page-subtitle">jan — mar 2026</div>
   </header>
 
-  <!-- Scroll hint -->
-  <div class="scroll-hint" aria-hidden="true">→</div>
+  <!-- 3×3 scrapbook grid -->
+  <div class="grid-wrap">
 
-  <!-- Horizontal gallery grid -->
-  <div class="timeline-track" role="main">
+    <!-- ── Scattered stickers & doodles ────────────── -->
 
-    <!-- Doodles float above grid in their own absolute layer -->
-    <div class="doodle-layer" aria-hidden="true">
-      <span class="doodle"    style="left:180px;  top:430px;">✦</span>
-      <span class="doodle-sm doodle" style="left:240px;  top:475px;">★</span>
-      <span class="doodle"    style="left:520px;  top:60px;">♡</span>
-      <span class="doodle-sm doodle" style="left:575px;  top:35px;">✦</span>
-      <span class="doodle-lg doodle" style="left:780px;  top:490px;">♡</span>
-      <span class="doodle-sm doodle" style="left:840px;  top:545px;">★</span>
-      <span class="doodle"    style="left:1050px; top:55px;">✦</span>
-      <span class="doodle-sm doodle" style="left:1110px; top:30px;">♡</span>
-      <span class="doodle-lg doodle" style="left:1460px; top:470px;">★</span>
-      <span class="doodle-sm doodle" style="left:1520px; top:510px;">✦</span>
-      <span class="doodle"    style="left:1800px; top:95px;">♡</span>
-      <span class="doodle-sm doodle" style="left:1860px; top:65px;">✦</span>
-    </div>
+    <!-- top-left corner cluster -->
+    <span class="sticker" style="font-size:26px; top:10px; left:4px;  transform:rotate(-18deg);">🌸</span>
+    <span class="sticker" style="font-size:13px; top:38px; left:34px; transform:rotate(8deg);  color:#e8a8c8;">✦</span>
+    <span class="sticker" style="font-size:10px; top:20px; left:60px; transform:rotate(-5deg); color:#c8a4b8;">★</span>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 1: Jan 1 — First date · med-landscape 3×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e1" style="grid-column: span 3; grid-row: 1 / span 1;">
-      <div class="polaroid rot-n2" id="polaroid-e1" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
+    <!-- top-right corner cluster -->
+    <span class="sticker" style="font-size:22px; top:8px;  right:6px;  transform:rotate(20deg);">🌷</span>
+    <span class="sticker" style="font-size:11px; top:32px; right:36px; transform:rotate(-10deg); color:#e8a8c8;">♡</span>
+    <span class="sticker" style="font-size:16px; top:16px; right:54px; transform:rotate(5deg);">✨</span>
+
+    <!-- between row 1 and row 2 — left side -->
+    <span class="sticker" style="font-size:20px; top:39%; left:-4px;  transform:rotate(14deg);">🎀</span>
+    <span class="sticker" style="font-size:11px; top:42%; left:26px;  transform:rotate(-22deg); color:#b0c4a0;">✦</span>
+
+    <!-- between row 1 and row 2 — right side -->
+    <span class="sticker" style="font-size:18px; top:39%; right:-2px; transform:rotate(-10deg);">🌸</span>
+    <span class="sticker" style="font-size:10px; top:43%; right:28px; transform:rotate(15deg); color:#c8a4b8;">★</span>
+
+    <!-- center sparkle between rows -->
+    <span class="sticker" style="font-size:14px; top:37%; left:50%; transform:translate(-50%,0) rotate(-6deg); color:#e8a8c8;">♡</span>
+
+    <!-- between row 2 and row 3 — left side -->
+    <span class="sticker" style="font-size:22px; top:69%; left:-2px;  transform:rotate(-12deg);">💕</span>
+    <span class="sticker" style="font-size:10px; top:73%; left:28px;  transform:rotate(18deg); color:#c8a4b8;">✦</span>
+
+    <!-- between row 2 and row 3 — right side -->
+    <span class="sticker" style="font-size:20px; top:70%; right:0px;  transform:rotate(9deg);">🌷</span>
+    <span class="sticker" style="font-size:11px; top:74%; right:32px; transform:rotate(-15deg); color:#e8a8c8;">✦</span>
+
+    <!-- bottom corner cluster -->
+    <span class="sticker" style="font-size:18px; bottom:42px; left:8px;   transform:rotate(12deg);">🌸</span>
+    <span class="sticker" style="font-size:12px; bottom:30px; left:40px;  transform:rotate(-8deg); color:#e8a8c8;">♡</span>
+    <span class="sticker" style="font-size:22px; bottom:38px; right:12px; transform:rotate(-14deg);">🎀</span>
+    <span class="sticker" style="font-size:11px; bottom:26px; right:44px; transform:rotate(10deg); color:#b0c4a0;">★</span>
+
+    <div class="event-grid">
+
+      <!-- ══ 1 · Jan 1 — First Date ══════════════════ -->
+      <div class="polaroid rot-n2" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="tape tape-tl tape-pink" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🎬<br>photo<br>here</div>
@@ -407,13 +340,9 @@
           <div class="polaroid-desc">even if marty was the one under a24 lighting, you were the one who stole the spotlight♡</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 2: Jan 8 — Official · large 3×2 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e2" style="grid-column: span 3; grid-row: 2 / span 2;">
-      <div class="polaroid rot-p3" id="polaroid-e2" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
+      <!-- ══ 2 · Jan 8 — Official ═════════════════════ -->
+      <div class="polaroid rot-p3" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">♡ official</div>
@@ -425,13 +354,10 @@
           <div class="polaroid-desc">i wanted to repay you for the hersheys you gave me this day but i'm sorry i nearly poisioned you instead ♡</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 3: Jan 15 — Mood Coffee · med-landscape 3×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e3" style="grid-column: span 3; grid-row: 4 / span 1;">
-      <div class="polaroid rot-n1" id="polaroid-e3" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
+      <!-- ══ 3 · Jan 15 — Mood Coffee ════════════════ -->
+      <div class="polaroid rot-n1" onclick="openLightbox(this)" role="button" tabindex="0">
+        <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">☕<br>photo<br>here</div>
         </div>
@@ -441,13 +367,10 @@
           <div class="polaroid-desc">tea too hot + hit the curb. however, it introduced me to hibiscus tea (which i am downing while making this website) so i think it was fire</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 4: Jan 21 — I Heart Boba · small 2×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e4" style="grid-column: span 2; grid-row: 1 / span 1;">
-      <div class="polaroid rot-p1" id="polaroid-e4" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
+      <!-- ══ 4 · Jan 21 — I Heart Boba ═══════════════ -->
+      <div class="polaroid rot-p1" onclick="openLightbox(this)" role="button" tabindex="0">
+        <div class="tape tape-tr tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🧋<br>photo<br>here</div>
         </div>
@@ -457,46 +380,35 @@
           <div class="polaroid-desc">honey lemon tea (gross)</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- MINI EVENT: Feb 2 — Cookies & Mocha · small 2×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="m1" style="grid-column: span 2; grid-row: 3 / span 1;">
+      <!-- ══ 5 · Feb 2 — Cookies & Mocha ════════════ -->
       <div class="polaroid" style="transform:rotate(-6deg);" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="tape tape-tl tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪☕</div>
         </div>
         <div class="polaroid-body">
-          <div class="polaroid-date">Feb 2</div>
+          <div class="polaroid-date">Feb 2, 2026</div>
           <div class="polaroid-title">cookies & mocha</div>
           <div class="polaroid-desc">sneaky little coffee date ♡</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- MINI EVENT: Feb 6 — Cookies Again · small 2×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="m2" style="grid-column: span 2; grid-row: 4 / span 1;">
+      <!-- ══ 6 · Feb 6 — Cookies Again ═══════════════ -->
       <div class="polaroid" style="transform:rotate(4deg);" onclick="openLightbox(this)" role="button" tabindex="0">
+        <div class="tape tape-tr tape-pink" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪</div>
         </div>
         <div class="polaroid-body">
-          <div class="polaroid-date">Feb 6</div>
+          <div class="polaroid-date">Feb 6, 2026</div>
           <div class="polaroid-title">cookies again</div>
           <div class="polaroid-desc">we have a type ♡</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 5: Feb 10 — First Kiss · large 3×2 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e5" style="grid-column: span 3; grid-row: 1 / span 2;">
-      <div class="polaroid" id="polaroid-e5" style="transform:rotate(-11deg);" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
+      <!-- ══ 7 · Feb 10 — First Kiss ═════════════════ -->
+      <div class="polaroid rot-n3" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">✨ special</div>
@@ -508,14 +420,10 @@
           <div class="polaroid-desc">movies told me first kisses were really bad and awkward so we're just better than the movies ♡</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 6: Feb 17 — First Photos · med-landscape 3×1 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e6" style="grid-column: span 3; grid-row: 3 / span 1;">
-      <div class="polaroid rot-p2" id="polaroid-e6" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
-        <div class="tape tape-tr tape-sage" aria-hidden="true"></div>
+      <!-- ══ 8 · Feb 17 — First Photos ═══════════════ -->
+      <div class="polaroid rot-p2" onclick="openLightbox(this)" role="button" tabindex="0">
+        <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">📸 us</div>
           <div class="polaroid-img-placeholder">📷<br>photo<br>here</div>
@@ -526,15 +434,11 @@
           <div class="polaroid-desc">our first pictures as a couple. keeping these forever.</div>
         </div>
       </div>
-    </div>
 
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 7: Mar 9 — Chosen Valentine's · XL 4×2 -->
-    <!-- ════════════════════════════════════════════════ -->
-    <div class="event-wrapper" data-id="e7" style="grid-column: span 4; grid-row: 2 / span 2;">
-      <div class="polaroid rot-n1" id="polaroid-e7" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
-        <div class="tape tape-tl tape-pink" aria-hidden="true"></div>
-        <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
+      <!-- ══ 9 · Mar 9 — Chosen Valentine's ══════════ -->
+      <div class="polaroid rot-n1" onclick="openLightbox(this)" role="button" tabindex="0">
+        <div class="tape tape-tl tape-pink"  aria-hidden="true"></div>
+        <div class="tape tape-br tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">♡ our day</div>
           <div class="polaroid-img-placeholder">🌹<br>photo<br>here</div>
@@ -545,9 +449,9 @@
           <div class="polaroid-desc">2 months + 1 day after official. 21 is your favorite number. ♡</div>
         </div>
       </div>
-    </div>
 
-  </div><!-- /timeline-track -->
+    </div><!-- /event-grid -->
+  </div><!-- /grid-wrap -->
 
   <!-- Lightbox overlay -->
   <div class="gallery-overlay" id="gallery-overlay" onclick="handleOverlayClick(event)">
@@ -555,23 +459,18 @@
   </div>
 
   <script>
-    // ── Lightbox ───────────────────────────────────────
     let activeCard = null;
 
     function openLightbox(card) {
-      const overlay = document.getElementById('gallery-overlay');
+      const overlay     = document.getElementById('gallery-overlay');
       const lightboxCard = document.getElementById('lightbox-card');
 
-      // Clone the polaroid into the lightbox
       lightboxCard.innerHTML = '';
       const clone = card.cloneNode(true);
       clone.removeAttribute('onclick');
-      clone.removeAttribute('id');
       clone.removeAttribute('tabindex');
-      clone.style.transform = 'none'; // lightbox-card container handles rotation
       lightboxCard.appendChild(clone);
 
-      // Dim original card
       if (activeCard) activeCard.style.opacity = '';
       card.style.opacity = '0.35';
       activeCard = card;
@@ -580,38 +479,20 @@
     }
 
     function closeLightbox() {
-      const overlay = document.getElementById('gallery-overlay');
-      overlay.classList.remove('active');
-      if (activeCard) {
-        activeCard.style.opacity = '';
-        activeCard = null;
-      }
+      document.getElementById('gallery-overlay').classList.remove('active');
+      if (activeCard) { activeCard.style.opacity = ''; activeCard = null; }
     }
 
     function handleOverlayClick(e) {
       if (e.target === e.currentTarget) closeLightbox();
     }
 
-    // Keyboard support
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeLightbox();
-    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
     document.querySelectorAll('.polaroid').forEach(card => {
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
       });
     });
-
-    // ── Scroll hint ────────────────────────────────────
-    const hint = document.querySelector('.scroll-hint');
-    let hintHidden = false;
-    window.addEventListener('scroll', () => {
-      if (!hintHidden) {
-        hint.style.opacity = '0';
-        hint.style.transition = 'opacity 0.5s';
-        hintHidden = true;
-      }
-    }, { passive: true });
   </script>
 </body>
 </html>
