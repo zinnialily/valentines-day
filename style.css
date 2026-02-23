@@ -1,146 +1,430 @@
-* {
+/* ══════════════════════════════════════════════════════════
+   Our Story — HTTYD: Cozy Viking Village Theme
+   Toothless (Night Fury) × Light Fury edition
+   ══════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ─────────────────────────────── */
+:root {
+    --sky-top:        #2a1848;
+    --sky-purple:     #6e2c5e;
+    --sky-burn:       #c04e28;
+    --sky-amber:      #e27836;
+    --sky-gold:       #eda04e;
+
+    --mountain-far:   #261030;
+    --mountain-near:  #180818;
+
+    --wood-dark:      #472810;
+    --wood-border:    #351a08;
+    --parchment:      #f2e2ba;
+    --parchment-warm: #e8d2a0;
+
+    --amber:          #c07820;
+    --ember:          #ff6818;
+
+    --font-title:     'Cinzel', Georgia, serif;
+    --font-body:      'IM Fell English', Georgia, serif;
+}
+
+/* ── Reset ─────────────────────────────────────────────── */
+*, *::before, *::after {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Georgia', 'Garamond', serif;
-    background-color: #f9f7f4;
-    min-height: 100vh;
+/* ── Scene (full viewport, sunset gradient) ────────────── */
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.scene {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(
+        to bottom,
+        var(--sky-top)    0%,
+        var(--sky-purple) 22%,
+        var(--sky-burn)   52%,
+        var(--sky-amber)  74%,
+        var(--sky-gold)   100%
+    );
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #8b7355;
+    overflow: hidden;
 }
 
-.password-container {
+/* ── Mountain silhouettes ──────────────────────────────── */
+.mountains {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    padding: 20px;
+    height: 42%;
+    pointer-events: none;
 }
 
-.password-card {
-    background-color: #fefdfb;
-    border-radius: 16px;
-    padding: 60px 48px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
-    max-width: 420px;
-    margin: 0 auto;
+.mountains-far {
+    clip-path: polygon(
+        0% 100%,  4% 65%,  9% 78%, 14% 50%, 20% 68%, 26% 40%,
+        33% 60%, 40% 32%, 47% 54%, 54% 28%, 61% 50%, 68% 32%,
+        75% 54%, 82% 38%, 89% 58%, 96% 42%, 100% 55%, 100% 100%
+    );
+    background: var(--mountain-far);
+    opacity: 0.88;
+    z-index: 1;
+}
+
+.mountains-near {
+    clip-path: polygon(
+        0% 100%,  5% 74%, 12% 86%, 18% 62%, 25% 80%, 32% 54%,
+        40% 72%, 48% 46%, 56% 70%, 64% 44%, 72% 64%, 80% 46%,
+        88% 66%, 100% 50%, 100% 100%
+    );
+    background: var(--mountain-near);
+    z-index: 2;
+}
+
+/* ── Floating ember particles ──────────────────────────── */
+.embers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+    overflow: hidden;
+}
+
+.ember {
+    position: absolute;
+    bottom: -8px;
+    border-radius: 50%;
+    background: var(--ember);
+    box-shadow: 0 0 6px 2px rgba(255, 130, 30, 0.65);
+    opacity: 0;
+    animation: ember-rise linear infinite;
+}
+
+/* Staggered sizing, positions, and timing per ember */
+.ember:nth-child(1)  { width:4px;height:4px; left: 7%; animation-duration:5.1s; animation-delay:0.0s; }
+.ember:nth-child(2)  { width:3px;height:3px; left:14%; animation-duration:4.7s; animation-delay:0.9s; }
+.ember:nth-child(3)  { width:5px;height:5px; left:22%; animation-duration:6.0s; animation-delay:1.6s; }
+.ember:nth-child(4)  { width:3px;height:3px; left:30%; animation-duration:4.4s; animation-delay:2.3s; }
+.ember:nth-child(5)  { width:4px;height:4px; left:39%; animation-duration:5.6s; animation-delay:0.5s; }
+.ember:nth-child(6)  { width:3px;height:3px; left:47%; animation-duration:4.9s; animation-delay:2.0s; }
+.ember:nth-child(7)  { width:5px;height:5px; left:54%; animation-duration:5.3s; animation-delay:3.2s; }
+.ember:nth-child(8)  { width:4px;height:4px; left:62%; animation-duration:6.2s; animation-delay:0.7s; }
+.ember:nth-child(9)  { width:3px;height:3px; left:70%; animation-duration:4.5s; animation-delay:2.8s; }
+.ember:nth-child(10) { width:5px;height:5px; left:79%; animation-duration:5.7s; animation-delay:1.3s; }
+.ember:nth-child(11) { width:3px;height:3px; left:87%; animation-duration:4.2s; animation-delay:3.9s; }
+.ember:nth-child(12) { width:4px;height:4px; left:94%; animation-duration:5.4s; animation-delay:2.1s; }
+
+@keyframes ember-rise {
+    0%   { transform: translateY(0)      translateX(0);    opacity: 0;   }
+    8%   { opacity: 0.95; }
+    80%  { opacity: 0.55; }
+    100% { transform: translateY(-95vh) translateX(28px); opacity: 0;   }
+}
+
+/* ── Page title ────────────────────────────────────────── */
+.title {
+    font-family: var(--font-title);
+    font-size: clamp(24px, 3.8vw, 50px);
+    font-weight: 600;
+    color: #f6e4c0;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-shadow:
+        0 0 24px rgba(240, 155, 70, 0.85),
+        0 2px 5px rgba(0, 0, 0, 0.55);
+    margin-bottom: clamp(10px, 2vh, 26px);
+    position: relative;
+    z-index: 10;
+    user-select: none;
+}
+
+/* ── Dragon scene row ──────────────────────────────────── */
+.dragon-scene {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    max-width: 1080px;
+    padding: 0 8px;
+    position: relative;
+    z-index: 10;
+    gap: 0;
+}
+
+/* ── Dragon SVGs ───────────────────────────────────────── */
+.dragon {
+    flex-shrink: 0;
+    width: clamp(140px, 19vw, 250px);
+    height: auto;
+}
+
+.toothless {
+    filter:
+        drop-shadow(0 12px 22px rgba(0, 0, 0, 0.65))
+        drop-shadow(0 0 16px rgba(0, 220, 100, 0.1));
+}
+
+.light-fury {
+    filter:
+        drop-shadow(0 12px 22px rgba(0, 0, 0, 0.4))
+        drop-shadow(0 0 20px rgba(120, 210, 255, 0.18));
+}
+
+/* ── Wing animations ───────────────────────────────────── */
+.wing {
+    transform-box: fill-box;
+}
+
+/* Toothless upper wing — pivots at shoulder (right-bottom of wing bounding box) */
+.wing-upper-left {
+    transform-origin: right bottom;
+    animation: flap-upper-left 2.7s ease-in-out infinite;
+}
+
+/* Toothless lower wing — pivots at upper-right */
+.wing-lower-left {
+    transform-origin: right top;
+    animation: flap-lower-left 2.7s ease-in-out infinite;
+}
+
+/* Light Fury upper wing — pivots at shoulder (left-bottom) */
+.wing-upper-right {
+    transform-origin: left bottom;
+    animation: flap-upper-right 2.7s ease-in-out infinite;
+    animation-delay: 0.85s; /* offset so they're not perfectly in sync */
+}
+
+/* Light Fury lower wing — pivots at upper-left */
+.wing-lower-right {
+    transform-origin: left top;
+    animation: flap-lower-right 2.7s ease-in-out infinite;
+    animation-delay: 0.85s;
+}
+
+@keyframes flap-upper-left {
+    0%, 100% { transform: rotate(0deg); }
+    42%       { transform: rotate(-17deg); }
+}
+@keyframes flap-lower-left {
+    0%, 100% { transform: rotate(0deg); }
+    42%       { transform: rotate(13deg); }
+}
+@keyframes flap-upper-right {
+    0%, 100% { transform: rotate(0deg); }
+    42%       { transform: rotate(17deg); }
+}
+@keyframes flap-lower-right {
+    0%, 100% { transform: rotate(0deg); }
+    42%       { transform: rotate(-13deg); }
+}
+
+/* ── Toothless fire breath glow ────────────────────────── */
+.fire-glow {
+    animation: fire-flicker 0.9s ease-in-out infinite alternate;
+}
+@keyframes fire-flicker {
+    0%   { opacity: 0.20; transform: scale(1.00); }
+    50%  { opacity: 0.38; transform: scale(1.12); }
+    100% { opacity: 0.24; transform: scale(0.94); }
+}
+
+/* ── Light Fury bioluminescent markings ────────────────── */
+.bio-line {
+    animation: bio-pulse 3.2s ease-in-out infinite alternate;
+}
+@keyframes bio-pulse {
+    0%   { opacity: 0.25; }
+    100% { opacity: 0.75; }
+}
+
+/* ── Banner section (center column) ───────────────────── */
+.banner-section {
+    flex: 1;
+    max-width: 330px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    /* Lift banner up slightly so it doesn't sit on the very floor */
+    margin-bottom: 24px;
+}
+
+/* Rope SVG */
+.rope {
+    width: 100%;
+    height: 52px;
+    display: block;
+    flex-shrink: 0;
+}
+
+/* ── Wooden hanging banner ─────────────────────────────── */
+.banner {
+    width: 100%;
+    background: var(--wood-dark);
+    border: 3px solid var(--wood-border);
+    border-radius: 5px 7px 7px 5px;
+    padding: 20px 22px 16px;
     text-align: center;
+    position: relative;
+    /* Warm firelight reflection */
+    box-shadow:
+        inset 0 1px 4px rgba(255, 195, 90, 0.12),
+        0 8px 28px rgba(0, 0, 0, 0.55),
+        0 0 44px rgba(190, 110, 28, 0.18);
+    transform-origin: top center;
+    animation: banner-sway 4.8s ease-in-out infinite;
 }
 
-.password-title {
-    font-size: 36px;
-    font-weight: 400;
-    margin-bottom: 48px;
-    letter-spacing: 0.5px;
-    color: #8b7355;
+/* Nails at the top of the banner */
+.banner-nails {
+    position: absolute;
+    top: -11px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 22px;
+    pointer-events: none;
+}
+.nail {
+    width: 10px;
+    height: 18px;
+    background: linear-gradient(to bottom, #c8a030, #7a5010);
+    border-radius: 2px 2px 5px 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.55);
 }
 
+@keyframes banner-sway {
+    0%, 100% { transform: rotate(-1.8deg); }
+    50%       { transform: rotate( 1.8deg); }
+}
+
+/* ── Banner label ──────────────────────────────────────── */
+.banner-label {
+    font-family: var(--font-title);
+    font-size: clamp(9px, 1.3vw, 13px);
+    font-weight: 600;
+    color: var(--parchment);
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 13px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.55);
+    opacity: 0.9;
+    user-select: none;
+}
+
+/* ── Password form ─────────────────────────────────────── */
 .password-form {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-}
-
-.form-group {
-    position: relative;
+    gap: 10px;
 }
 
 .password-input {
     width: 100%;
-    padding: 14px 18px;
-    font-size: 15px;
-    border: 1.5px solid #e8ddd4;
-    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-family: var(--font-body);
+    background: var(--parchment);
+    border: 2px solid #7a4e1c;
+    border-radius: 4px;
+    color: #3a180a;
+    text-align: center;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fafaf8;
-    color: #8b7355;
-    font-family: 'Georgia', 'Garamond', serif;
 }
-
 .password-input::placeholder {
-    color: #d4c4b0;
+    color: #9a7848;
+    font-style: italic;
 }
-
 .password-input:focus {
     outline: none;
-    border-color: #e8a8c8;
-    box-shadow: 0 4px 16px rgba(232, 168, 200, 0.15);
+    border-color: var(--amber);
+    box-shadow: 0 0 14px rgba(192, 120, 32, 0.45);
+    background: var(--parchment-warm);
 }
 
+/* ── Submit button ─────────────────────────────────────── */
 .password-button {
-    padding: 13px 32px;
-    font-size: 15px;
-    font-weight: 400;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-family: var(--font-title);
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
     border: none;
-    border-radius: 10px;
-    background-color: #e8a8c8;
-    color: #fefdfb;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #cc8a2e, #a06020);
+    color: #fff6e4;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 12px rgba(232, 168, 200, 0.2);
-    font-family: 'Georgia', 'Garamond', serif;
+    transition: all 0.22s ease;
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.45), 0 0 14px rgba(196, 128, 40, 0.22);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
-
 .password-button:hover {
-    background-color: #e098bc;
-    box-shadow: 0 6px 16px rgba(232, 168, 200, 0.3);
+    background: linear-gradient(to bottom, #e09838, #b87030);
+    box-shadow: 0 5px 14px rgba(0, 0, 0, 0.45), 0 0 20px rgba(220, 148, 50, 0.32);
+    transform: translateY(-1px);
 }
-
 .password-button:active {
-    transform: scale(0.98);
+    transform: translateY(0) scale(0.97);
 }
 
-.password-button:disabled {
-    background-color: #d4c4b0;
-    cursor: not-allowed;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
+/* ── Error message ─────────────────────────────────────── */
 .error-message {
-    color: #d17a7a;
-    font-size: 14px;
-    min-height: 18px;
-    display: none;
+    color: #ff9868;
+    font-size: 13px;
+    font-family: var(--font-body);
+    font-style: italic;
     text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    min-height: 16px;
+    display: none;
 }
-
 .error-message.show {
     display: block;
-    animation: shake 0.4s ease-in-out;
+    animation: shake 0.42s ease-in-out;
 }
-
 @keyframes shake {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    25% {
-        transform: translateX(-6px);
-    }
-    75% {
-        transform: translateX(6px);
-    }
+    0%, 100% { transform: translateX(0); }
+    25%       { transform: translateX(-7px); }
+    75%       { transform: translateX( 7px); }
 }
 
-/* Responsive design */
-@media (max-width: 480px) {
-    .password-card {
-        padding: 48px 32px;
+/* ── Responsive — mobile stack ─────────────────────────── */
+@media (max-width: 660px) {
+    html, body {
+        overflow-y: auto;
+        height: auto;
     }
-
-    .password-title {
-        font-size: 32px;
-        margin-bottom: 40px;
+    .scene {
+        height: auto;
+        min-height: 100vh;
+        padding: 40px 0 50px;
     }
-
-    .password-input {
-        padding: 12px 16px;
-        font-size: 15px;
+    .dragon-scene {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
     }
+    .dragon {
+        width: clamp(110px, 52vw, 170px);
+    }
+    /* Stack order: Toothless, banner, Light Fury */
+    .toothless    { order: 1; }
+    .banner-section { order: 2; max-width: 88vw; width: 88vw; }
+    .light-fury   { order: 3; }
 
-    .password-button {
-        padding: 12px 28px;
-        font-size: 15px;
+    .banner-label {
+        font-size: 11px;
     }
 }
