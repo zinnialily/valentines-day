@@ -88,26 +88,33 @@
       margin-top: 3px;
     }
 
-    /* ── Main horizontal scroll track ────────────── */
+    /* ── Main horizontal scroll track (CSS grid) ─── */
     .timeline-track {
-      position: relative;
-      width: 2800px;
+      display: grid;
+      grid-template-rows: repeat(4, 170px);
+      grid-auto-columns: 85px;
+      grid-auto-flow: dense;
       height: 680px;
+      width: max-content;
+      min-width: 100vw;
+      align-items: stretch;
+      position: relative; /* for doodle-layer */
     }
 
-    /* ── Section spacer — hidden in new layout ────── */
-    .spacer, .spacer-lg { display: none; }
-
-    /* ── Event wrapper — absolute positioned ──────── */
-    .event-wrapper {
-      position: absolute;
-      z-index: 2;
-    }
-
-    /* ── Mini event — absolute positioned ─────────── */
+    /* ── Event wrapper / mini event — grid items ──── */
+    .event-wrapper,
     .mini-event {
-      position: absolute;
       z-index: 2;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    /* ── Doodle layer — absolute over grid ────────── */
+    .doodle-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
     }
 
     /* ── Polaroid card ────────────────────────────── */
@@ -123,8 +130,10 @@
         box-shadow 0.35s ease;
       user-select: none;
       white-space: normal;
-      width: 210px;
+      width: 100%;
       position: relative; /* for tape pseudo-elements */
+      display: flex;
+      flex-direction: column;
     }
 
     /* Per-card rotation — more aggressive angles for scrapbook chaos */
@@ -141,27 +150,12 @@
         0 2px 8px rgba(139,115,85,0.12);
     }
 
-    /* expanded state */
-    .polaroid.open {
-      transform: rotate(0deg) scale(1.18) !important;
-      box-shadow:
-        0 16px 48px rgba(139,115,85,0.22),
-        0 4px 16px rgba(139,115,85,0.14);
-      z-index: 50;
-    }
-    .polaroid.open-large {
-      transform: rotate(0deg) scale(1.32) !important;
-      z-index: 50;
-    }
-    .polaroid.open-medium {
-      transform: rotate(0deg) scale(1.22) !important;
-      z-index: 50;
-    }
 
     /* image area */
     .polaroid-img {
       width: 100%;
-      aspect-ratio: 1 / 1;
+      flex: 1;
+      min-height: 60px;
       background: #f0ebe3;
       display: flex;
       align-items: center;
@@ -199,23 +193,15 @@
       font-style: italic;
     }
 
-    /* expandable description — hidden by default */
+    /* description — hidden in grid cards, shown in lightbox via .lightbox-card override */
     .polaroid-desc {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.35s ease, opacity 0.3s ease;
       opacity: 0;
       font-size: 10px;
       color: #a89070;
       line-height: 1.55;
       margin-top: 0;
-    }
-    .polaroid.open .polaroid-desc,
-    .polaroid.open-large .polaroid-desc,
-    .polaroid.open-medium .polaroid-desc {
-      max-height: 120px;
-      opacity: 1;
-      margin-top: 6px;
     }
 
     /* special badge */
@@ -324,15 +310,43 @@
     .doodle-lg { font-size: 20px; }
     .doodle-sm { font-size: 10px; opacity: 0.32; }
 
+    /* ── Lightbox overlay ─────────────────────────── */
+    .gallery-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(50, 35, 25, 0.55);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .gallery-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .lightbox-card {
+      max-width: 340px;
+      width: 90vw;
+      transform: rotate(-2deg);
+      position: relative;
+    }
+    .lightbox-card .polaroid {
+      width: 100%;
+      cursor: default;
+    }
+    .lightbox-card .polaroid-desc {
+      max-height: 200px !important;
+      opacity: 1 !important;
+      margin-top: 6px !important;
+    }
+
     /* ── Mobile responsive ────────────────────────── */
     @media (max-width: 700px) {
-      .polaroid { width: 120px; }
-      .spacer    { width: 50px; }
-      .spacer-lg { width: 70px; }
       .polaroid-title { font-size: 10px; }
-      .polaroid.open        { transform: rotate(0deg) scale(1.14) !important; }
-      .polaroid.open-large  { transform: rotate(0deg) scale(1.22) !important; }
-      .polaroid.open-medium { transform: rotate(0deg) scale(1.16) !important; }
+      .lightbox-card { transform: rotate(-1deg); }
     }
   </style>
 </head>
@@ -359,85 +373,30 @@
   <!-- Scroll hint -->
   <div class="scroll-hint" aria-hidden="true">→</div>
 
-  <!-- Horizontal timeline track -->
+  <!-- Horizontal gallery grid -->
   <div class="timeline-track" role="main">
 
-    <!-- Scatter doodles to fill dead space -->
-    <span class="doodle"    aria-hidden="true" style="left:250px;  top:480px;">✦</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:310px;  top:530px;">★</span>
-    <span class="doodle"    aria-hidden="true" style="left:760px;  top:135px;">♡</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:820px;  top:105px;">✦</span>
-    <span class="doodle-lg doodle" aria-hidden="true" style="left:1095px; top:455px;">♡</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:1160px; top:515px;">★</span>
-    <span class="doodle"    aria-hidden="true" style="left:1480px; top:455px;">✦</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:1540px; top:510px;">♡</span>
-    <span class="doodle-lg doodle" aria-hidden="true" style="left:1870px; top:115px;">★</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:1940px; top:85px; ">✦</span>
-    <span class="doodle"    aria-hidden="true" style="left:2360px; top:120px;">♡</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:2430px; top:90px; ">✦</span>
-    <span class="doodle-lg doodle" aria-hidden="true" style="left:2550px; top:440px;">★</span>
-    <span class="doodle-sm doodle" aria-hidden="true" style="left:2620px; top:500px;">♡</span>
-    <span class="doodle"    aria-hidden="true" style="left:2720px; top:250px;">✦</span>
-
-    <!-- SVG timeline line — irregular with loop + hand-drawn filter -->
-    <svg aria-hidden="true" viewBox="0 0 2800 680" xmlns="http://www.w3.org/2000/svg"
-         style="position:absolute;top:0;left:0;width:2800px;height:680px;pointer-events:none;z-index:0;">
-      <defs>
-        <!-- hand-drawn texture: displaces the stroke slightly so it looks pen-drawn -->
-        <filter id="rough" x="-5%" y="-30%" width="110%" height="160%">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.065"
-                        numOctaves="2" seed="3" result="noiseOut"/>
-          <feDisplacementMap in="SourceGraphic" in2="noiseOut"
-                             scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-        <!-- arrowhead for the stacked-card connector -->
-        <marker id="arr" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
-          <polygon points="0 0, 7 3, 0 6" fill="#c9a89a" opacity="0.72"/>
-        </marker>
-      </defs>
-
-      <!-- main timeline path:
-           - first peak x≈170 y≈140, first trough x≈570 y≈545
-           - second peak x≈800 y≈165, small dip x≈950-1010 y≈490
-           - LOOP: rises steeply to (1205,125), then FOLDS BACK to x≈1050 before sweeping to (1410,295)
-           - third peak x≈1570 y≈148, deep trough x≈1975 y≈515
-           - fourth peak x≈2310 y≈258, final trough x≈2440 y≈472 -->
-      <path filter="url(#rough)"
-        d="M 30,330
-           C 120,150 220,140 320,330
-           C 420,520 540,545 620,490
-           C 680,450 720,220 800,165
-           C 840,130 870,145 905,240
-           C 940,335 915,460 960,490
-           C 1000,520 1055,515 1010,340
-           C 1060,185 1110,90 1205,125
-           C 920,175 1100,460 1410,295
-           C 1460,275 1500,185 1570,148
-           C 1630,120 1665,140 1700,210
-           C 1740,280 1720,420 1760,475
-           C 1800,530 1895,550 1975,515
-           C 2055,480 2090,295 2150,240
-           C 2200,198 2260,195 2310,258
-           C 2360,320 2380,425 2440,472
-           C 2495,520 2600,478 2690,393
-           C 2748,336 2785,305 2800,300"
-        fill="none" stroke="#e8a8c8" stroke-width="2.5" stroke-linecap="round"/>
-
-      <!-- curved arrow connecting the stacked cookie polaroids (Feb 2 → Feb 6) -->
-      <path filter="url(#rough)"
-        d="M 1053,248 C 1032,298 1078,335 1053,382"
-        fill="none" stroke="#c9a89a" stroke-width="1.8"
-        stroke-linecap="round" marker-end="url(#arr)" opacity="0.75"/>
-    </svg>
+    <!-- Doodles float above grid in their own absolute layer -->
+    <div class="doodle-layer" aria-hidden="true">
+      <span class="doodle"    style="left:180px;  top:430px;">✦</span>
+      <span class="doodle-sm doodle" style="left:240px;  top:475px;">★</span>
+      <span class="doodle"    style="left:520px;  top:60px;">♡</span>
+      <span class="doodle-sm doodle" style="left:575px;  top:35px;">✦</span>
+      <span class="doodle-lg doodle" style="left:780px;  top:490px;">♡</span>
+      <span class="doodle-sm doodle" style="left:840px;  top:545px;">★</span>
+      <span class="doodle"    style="left:1050px; top:55px;">✦</span>
+      <span class="doodle-sm doodle" style="left:1110px; top:30px;">♡</span>
+      <span class="doodle-lg doodle" style="left:1460px; top:470px;">★</span>
+      <span class="doodle-sm doodle" style="left:1520px; top:510px;">✦</span>
+      <span class="doodle"    style="left:1800px; top:95px;">♡</span>
+      <span class="doodle-sm doodle" style="left:1860px; top:65px;">✦</span>
+    </div>
 
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 1: Jan 1 — First date (ABOVE) -->
+    <!-- EVENT 1: Jan 1 — First date · med-landscape 3×1 -->
     <!-- ════════════════════════════════════════════════ -->
-    <div class="spacer"></div>
-
-    <!-- Jan 1: near first crest (x≈200, y≈170), polaroid above -->
-    <div class="event-wrapper above" data-id="e1" style="left:20px; top:70px;">
-      <div class="polaroid rot-n2" id="polaroid-e1" onclick="togglePolaroid('e1', 'normal')" role="button" aria-expanded="false" tabindex="0">
+    <div class="event-wrapper" data-id="e1" style="grid-column: span 3; grid-row: 1 / span 1;">
+      <div class="polaroid rot-n2" id="polaroid-e1" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="tape tape-tl tape-pink" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🎬<br>photo<br>here</div>
@@ -450,14 +409,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 2: Jan 8 — Official (BELOW) [MAJOR] -->
+    <!-- EVENT 2: Jan 8 — Official · large 3×2 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Jan 8: midline going down (x≈400, y≈340), polaroid below — MAJOR -->
-    <div class="event-wrapper below" data-id="e2" style="left:310px; top:370px;">
-      <div class="polaroid rot-p3" id="polaroid-e2" onclick="togglePolaroid('e2', 'large')" role="button" aria-expanded="false" tabindex="0" style="width:240px;">
+    <div class="event-wrapper" data-id="e2" style="grid-column: span 3; grid-row: 2 / span 2;">
+      <div class="polaroid rot-p3" id="polaroid-e2" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">♡ official</div>
@@ -471,14 +427,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 3: Jan 15 — Mood Coffee (ABOVE) -->
+    <!-- EVENT 3: Jan 15 — Mood Coffee · med-landscape 3×1 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Jan 15: near trough (x≈640, y≈490), float HIGH — surprise contrast -->
-    <div class="event-wrapper above" data-id="e3" style="left:590px; top:75px;">
-      <div class="polaroid rot-n1" id="polaroid-e3" onclick="togglePolaroid('e3', 'normal')" role="button" aria-expanded="false" tabindex="0">
+    <div class="event-wrapper" data-id="e3" style="grid-column: span 3; grid-row: 4 / span 1;">
+      <div class="polaroid rot-n1" id="polaroid-e3" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">☕<br>photo<br>here</div>
         </div>
@@ -490,14 +443,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 4: Jan 21 — I Heart Boba (BELOW) -->
+    <!-- EVENT 4: Jan 21 — I Heart Boba · small 2×1 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Jan 21: between midline and crest (x≈880, y≈260), below -->
-    <div class="event-wrapper below" data-id="e4" style="left:845px; top:290px;">
-      <div class="polaroid rot-p1" id="polaroid-e4" onclick="togglePolaroid('e4', 'normal')" role="button" aria-expanded="false" tabindex="0">
+    <div class="event-wrapper" data-id="e4" style="grid-column: span 2; grid-row: 1 / span 1;">
+      <div class="polaroid rot-p1" id="polaroid-e4" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🧋<br>photo<br>here</div>
         </div>
@@ -509,15 +459,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- MINI EVENT: Feb 2 — Cookie & Mocha (ON LINE) -->
+    <!-- MINI EVENT: Feb 2 — Cookies & Mocha · small 2×1 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Feb 2 + Feb 6: stacked column — same x, connected by arrow in SVG -->
-    <!-- Feb 2: UPPER card (x≈1050, floats above the loop peak) -->
-    <div class="event-wrapper" data-id="m1" style="left:988px; top:58px;">
-      <div class="polaroid" style="width:130px; transform:rotate(-6deg);">
+    <div class="event-wrapper" data-id="m1" style="grid-column: span 2; grid-row: 3 / span 1;">
+      <div class="polaroid" style="transform:rotate(-6deg);" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="tape tape-tl tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪☕</div>
@@ -525,31 +471,32 @@
         <div class="polaroid-body">
           <div class="polaroid-date">Feb 2</div>
           <div class="polaroid-title">cookies & mocha</div>
+          <div class="polaroid-desc">sneaky little coffee date ♡</div>
         </div>
       </div>
     </div>
 
-    <!-- Feb 6: LOWER card (same x, below the loop — arrow points down to it) -->
-    <div class="event-wrapper" data-id="m2" style="left:988px; top:388px;">
-      <div class="polaroid" style="width:130px; transform:rotate(4deg);">
+    <!-- ════════════════════════════════════════════════ -->
+    <!-- MINI EVENT: Feb 6 — Cookies Again · small 2×1 -->
+    <!-- ════════════════════════════════════════════════ -->
+    <div class="event-wrapper" data-id="m2" style="grid-column: span 2; grid-row: 4 / span 1;">
+      <div class="polaroid" style="transform:rotate(4deg);" onclick="openLightbox(this)" role="button" tabindex="0">
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪</div>
         </div>
         <div class="polaroid-body">
           <div class="polaroid-date">Feb 6</div>
           <div class="polaroid-title">cookies again</div>
+          <div class="polaroid-desc">we have a type ♡</div>
         </div>
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 5: Feb 10 — First Kiss (ABOVE) [SPECIAL] -->
+    <!-- EVENT 5: Feb 10 — First Kiss · large 3×2 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Feb 10: near trough (x≈1430, y≈510), FLOAT HIGH dramatically — SPECIAL -->
-    <div class="event-wrapper above" data-id="e5" style="left:1370px; top:68px;">
-      <div class="polaroid rot-n2" id="polaroid-e5" onclick="togglePolaroid('e5', 'medium')" role="button" aria-expanded="false" tabindex="0" style="transform:rotate(-11deg);">
+    <div class="event-wrapper" data-id="e5" style="grid-column: span 3; grid-row: 1 / span 2;">
+      <div class="polaroid" id="polaroid-e5" style="transform:rotate(-11deg);" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">✨ special</div>
@@ -563,14 +510,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 6: Feb 17 — First Photos (BELOW) [SPECIAL] -->
+    <!-- EVENT 6: Feb 17 — First Photos · med-landscape 3×1 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Feb 17: near crest (x≈1790, y≈190), below — SPECIAL -->
-    <div class="event-wrapper below" data-id="e6" style="left:1700px; top:240px;">
-      <div class="polaroid rot-p2" id="polaroid-e6" onclick="togglePolaroid('e6', 'medium')" role="button" aria-expanded="false" tabindex="0">
+    <div class="event-wrapper" data-id="e6" style="grid-column: span 3; grid-row: 3 / span 1;">
+      <div class="polaroid rot-p2" id="polaroid-e6" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="tape tape-tr tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">📸 us</div>
@@ -584,14 +528,11 @@
       </div>
     </div>
 
-    <div class="spacer-lg"></div>
-
     <!-- ════════════════════════════════════════════════ -->
-    <!-- EVENT 7: Mar 9 — Chosen Valentine's (ABOVE) [BIGGEST] -->
+    <!-- EVENT 7: Mar 9 — Chosen Valentine's · XL 4×2 -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Mar 9: near trough (x≈2200, y≈500), centered on wave — BIGGEST -->
-    <div class="event-wrapper above" data-id="e7" style="left:2100px; top:240px;">
-      <div class="polaroid rot-n1" id="polaroid-e7" onclick="togglePolaroid('e7', 'large')" role="button" aria-expanded="false" tabindex="0" style="width:255px;">
+    <div class="event-wrapper" data-id="e7" style="grid-column: span 4; grid-row: 2 / span 2;">
+      <div class="polaroid rot-n1" id="polaroid-e7" onclick="openLightbox(this)" role="button" aria-expanded="false" tabindex="0">
         <div class="tape tape-tl tape-pink" aria-hidden="true"></div>
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
@@ -606,86 +547,64 @@
       </div>
     </div>
 
-    <div class="spacer"></div>
-
   </div><!-- /timeline-track -->
 
+  <!-- Lightbox overlay -->
+  <div class="gallery-overlay" id="gallery-overlay" onclick="handleOverlayClick(event)">
+    <div class="lightbox-card" id="lightbox-card"></div>
+  </div>
+
   <script>
-    // Track which polaroid is currently open
-    let currentOpen = null;
-    let currentSize = null;
+    // ── Lightbox ───────────────────────────────────────
+    let activeCard = null;
 
-    // Open/close classes per expand size
-    const sizeClass = {
-      'normal': 'open',
-      'medium': 'open-medium',
-      'large':  'open-large',
-    };
+    function openLightbox(card) {
+      const overlay = document.getElementById('gallery-overlay');
+      const lightboxCard = document.getElementById('lightbox-card');
 
-    function togglePolaroid(id, size) {
-      const el = document.getElementById('polaroid-' + id);
-      if (!el) return;
+      // Clone the polaroid into the lightbox
+      lightboxCard.innerHTML = '';
+      const clone = card.cloneNode(true);
+      clone.removeAttribute('onclick');
+      clone.removeAttribute('id');
+      clone.removeAttribute('tabindex');
+      clone.style.transform = 'none'; // lightbox-card container handles rotation
+      lightboxCard.appendChild(clone);
 
-      const openClass = sizeClass[size] || 'open';
+      // Dim original card
+      if (activeCard) activeCard.style.opacity = '';
+      card.style.opacity = '0.35';
+      activeCard = card;
 
-      // If clicking the already-open polaroid — close it
-      if (currentOpen === id) {
-        el.classList.remove(openClass);
-        el.setAttribute('aria-expanded', 'false');
-        currentOpen = null;
-        currentSize = null;
-        return;
-      }
-
-      // Close any previously open polaroid
-      if (currentOpen) {
-        const prev = document.getElementById('polaroid-' + currentOpen);
-        if (prev) {
-          prev.classList.remove(sizeClass[currentSize] || 'open');
-          prev.setAttribute('aria-expanded', 'false');
-        }
-      }
-
-      // Open the new one
-      el.classList.add(openClass);
-      el.setAttribute('aria-expanded', 'true');
-      currentOpen = id;
-      currentSize = size;
+      overlay.classList.add('active');
     }
 
-    // Keyboard support — Enter/Space triggers click
+    function closeLightbox() {
+      const overlay = document.getElementById('gallery-overlay');
+      overlay.classList.remove('active');
+      if (activeCard) {
+        activeCard.style.opacity = '';
+        activeCard = null;
+      }
+    }
+
+    function handleOverlayClick(e) {
+      if (e.target === e.currentTarget) closeLightbox();
+    }
+
+    // Keyboard support
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
     document.querySelectorAll('.polaroid').forEach(card => {
       card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
       });
     });
 
-    // Close open polaroid on Escape
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && currentOpen) {
-        const prev = document.getElementById('polaroid-' + currentOpen);
-        if (prev) {
-          prev.classList.remove(sizeClass[currentSize] || 'open');
-          prev.setAttribute('aria-expanded', 'false');
-        }
-        currentOpen = null;
-        currentSize = null;
-      }
-    });
-
-    // Hide scroll hint after first scroll
+    // ── Scroll hint ────────────────────────────────────
     const hint = document.querySelector('.scroll-hint');
     let hintHidden = false;
-    document.addEventListener('scroll', () => {
-      if (!hintHidden) {
-        hint.style.opacity = '0';
-        hint.style.transition = 'opacity 0.5s';
-        hintHidden = true;
-      }
-    }, { passive: true });
     window.addEventListener('scroll', () => {
       if (!hintHidden) {
         hint.style.opacity = '0';
