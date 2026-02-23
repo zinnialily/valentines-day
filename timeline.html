@@ -379,12 +379,55 @@
     <span class="doodle-sm doodle" aria-hidden="true" style="left:2620px; top:500px;">♡</span>
     <span class="doodle"    aria-hidden="true" style="left:2720px; top:250px;">✦</span>
 
-    <!-- SVG wave line -->
+    <!-- SVG timeline line — irregular with loop + hand-drawn filter -->
     <svg aria-hidden="true" viewBox="0 0 2800 680" xmlns="http://www.w3.org/2000/svg"
          style="position:absolute;top:0;left:0;width:2800px;height:680px;pointer-events:none;z-index:0;">
-      <path
-        d="M 0,340 C 100,170 300,170 400,340 C 500,510 700,510 800,340 C 900,170 1100,170 1200,340 C 1300,510 1500,510 1600,340 C 1700,170 1900,170 2000,340 C 2100,510 2300,510 2400,340 C 2500,170 2700,170 2800,340"
+      <defs>
+        <!-- hand-drawn texture: displaces the stroke slightly so it looks pen-drawn -->
+        <filter id="rough" x="-5%" y="-30%" width="110%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04 0.065"
+                        numOctaves="2" seed="3" result="noiseOut"/>
+          <feDisplacementMap in="SourceGraphic" in2="noiseOut"
+                             scale="1.8" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+        <!-- arrowhead for the stacked-card connector -->
+        <marker id="arr" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto">
+          <polygon points="0 0, 7 3, 0 6" fill="#c9a89a" opacity="0.72"/>
+        </marker>
+      </defs>
+
+      <!-- main timeline path:
+           - first peak x≈170 y≈140, first trough x≈570 y≈545
+           - second peak x≈800 y≈165, small dip x≈950-1010 y≈490
+           - LOOP: rises steeply to (1205,125), then FOLDS BACK to x≈1050 before sweeping to (1410,295)
+           - third peak x≈1570 y≈148, deep trough x≈1975 y≈515
+           - fourth peak x≈2310 y≈258, final trough x≈2440 y≈472 -->
+      <path filter="url(#rough)"
+        d="M 30,330
+           C 120,150 220,140 320,330
+           C 420,520 540,545 620,490
+           C 680,450 720,220 800,165
+           C 840,130 870,145 905,240
+           C 940,335 915,460 960,490
+           C 1000,520 1055,515 1010,340
+           C 1060,185 1110,90 1205,125
+           C 920,175 1100,460 1410,295
+           C 1460,275 1500,185 1570,148
+           C 1630,120 1665,140 1700,210
+           C 1740,280 1720,420 1760,475
+           C 1800,530 1895,550 1975,515
+           C 2055,480 2090,295 2150,240
+           C 2200,198 2260,195 2310,258
+           C 2360,320 2380,425 2440,472
+           C 2495,520 2600,478 2690,393
+           C 2748,336 2785,305 2800,300"
         fill="none" stroke="#e8a8c8" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- curved arrow connecting the stacked cookie polaroids (Feb 2 → Feb 6) -->
+      <path filter="url(#rough)"
+        d="M 1053,248 C 1032,298 1078,335 1053,382"
+        fill="none" stroke="#c9a89a" stroke-width="1.8"
+        stroke-linecap="round" marker-end="url(#arr)" opacity="0.75"/>
     </svg>
 
     <!-- ════════════════════════════════════════════════ -->
@@ -471,26 +514,31 @@
     <!-- ════════════════════════════════════════════════ -->
     <!-- MINI EVENT: Feb 2 — Cookie & Mocha (ON LINE) -->
     <!-- ════════════════════════════════════════════════ -->
-    <!-- Feb 2 mini: near midline (x≈1080, y≈340) -->
-    <div class="mini-event" data-id="m1" style="left:1062px; top:268px;">
-      <div class="mini-bubble">
-        <div class="mini-icon">🍪☕</div>
-        <div class="mini-label">cookies & mocha</div>
-        <div class="mini-date">Feb 2</div>
+    <!-- Feb 2 + Feb 6: stacked column — same x, connected by arrow in SVG -->
+    <!-- Feb 2: UPPER card (x≈1050, floats above the loop peak) -->
+    <div class="event-wrapper" data-id="m1" style="left:988px; top:58px;">
+      <div class="polaroid" style="width:130px; transform:rotate(-6deg);">
+        <div class="tape tape-tl tape-sage" aria-hidden="true"></div>
+        <div class="polaroid-img">
+          <div class="polaroid-img-placeholder">🍪☕</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Feb 2</div>
+          <div class="polaroid-title">cookies & mocha</div>
+        </div>
       </div>
     </div>
 
-    <div class="spacer"></div>
-
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- MINI EVENT: Feb 6 — Cookies again (ON LINE) -->
-    <!-- ════════════════════════════════════════════════ -->
-    <!-- Feb 6 mini: going toward trough (x≈1215, y≈390) -->
-    <div class="mini-event" data-id="m2" style="left:1195px; top:355px;">
-      <div class="mini-bubble">
-        <div class="mini-icon">🍪</div>
-        <div class="mini-label">cookies again (this time u got hella glazed tho)</div>
-        <div class="mini-date">Feb 6</div>
+    <!-- Feb 6: LOWER card (same x, below the loop — arrow points down to it) -->
+    <div class="event-wrapper" data-id="m2" style="left:988px; top:388px;">
+      <div class="polaroid" style="width:130px; transform:rotate(4deg);">
+        <div class="polaroid-img">
+          <div class="polaroid-img-placeholder">🍪</div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Feb 6</div>
+          <div class="polaroid-title">cookies again</div>
+        </div>
       </div>
     </div>
 
