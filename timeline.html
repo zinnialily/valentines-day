@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Our Timeline ♡</title>
+
   <style>
     /* ── Reset & base ─────────────────────────────── */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -221,11 +222,11 @@
       line-height: 1;
     }
 
-    /* ── Lightbox overlay ─────────────────────────── */
-    .gallery-overlay {
+    /* ── Scrapbook overlay ────────────────────────── */
+    .scrapbook-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(50, 35, 25, 0.55);
+      background: rgba(28, 18, 12, 0.75);
       z-index: 300;
       display: flex;
       align-items: center;
@@ -233,27 +234,110 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.3s ease;
+      padding: 24px;
+      overflow-y: auto;
     }
-    .gallery-overlay.active {
+    .scrapbook-overlay.active {
       opacity: 1;
       pointer-events: all;
     }
-    .lightbox-card {
-      max-width: 340px;
-      width: 90vw;
-      transform: rotate(-2deg);
+    .scrapbook-page {
       position: relative;
+      background: #faf7f0;
+      width: min(96vw, 780px);
+      border-radius: 3px;
+      padding: 56px 84px 60px;
+      box-shadow:
+        0 28px 80px rgba(0,0,0,0.4),
+        0 4px 20px rgba(0,0,0,0.18),
+        inset 0 0 0 1px rgba(139,115,85,0.1);
+      transform: scale(0.92);
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+      text-align: center;
     }
-    .lightbox-card .polaroid {
-      width: 100%;
-      cursor: default;
-      transform: none !important;
+    .scrapbook-overlay.active .scrapbook-page {
+      transform: scale(1);
     }
-    .lightbox-card .polaroid-img { height: 220px; }
-    .lightbox-card .polaroid-desc {
-      max-height: 200px !important;
-      opacity: 1 !important;
-      margin-top: 8px !important;
+
+    /* art area */
+    .sb-art-wrap {
+      position: relative;
+      margin: 0 auto 20px;
+      display: inline-block;
+    }
+    .sb-art-tape {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-4deg);
+      width: 88px;
+      height: 21px;
+      border-radius: 2px;
+      opacity: 0.72;
+      z-index: 6;
+      pointer-events: none;
+    }
+    .sb-emoji {
+      font-size: 100px;
+      line-height: 1;
+      display: block;
+      padding: 16px 24px;
+      background: #f0ebe3;
+      border-radius: 4px;
+    }
+
+    /* text */
+    .sb-date {
+      font-family: 'Bradley Hand', 'Segoe Script', cursive;
+      font-size: 15px;
+      color: #c8a4b8;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .sb-badge {
+      display: inline-block;
+      background: #e8a8c8;
+      color: white;
+      font-size: 10px;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-family: Georgia, serif;
+    }
+    .sb-title {
+      font-family: 'Bradley Hand', 'Segoe Script', cursive;
+      font-size: 36px;
+      color: #8b7355;
+      line-height: 1.2;
+      margin-bottom: 14px;
+    }
+    .sb-caption {
+      font-family: 'Bradley Hand', 'Segoe Script', cursive;
+      font-size: 20px;
+      color: #a89070;
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* floating stickers + doodles on the page */
+    .sb-sticker, .sb-doodle {
+      position: absolute;
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+    .sb-sticker { z-index: 5; }
+    .sb-doodle  { z-index: 4; opacity: 0.55; }
+
+    /* ── Mobile ─────────────────────────────────────── */
+    @media (max-width: 600px) {
+      .scrapbook-page { padding: 40px 32px 44px; }
+      .sb-title   { font-size: 26px; }
+      .sb-caption { font-size: 17px; }
     }
 
     /* ── Mobile responsive ────────────────────────── */
@@ -329,7 +413,7 @@
     <div class="event-grid">
 
       <!-- ══ 1 · Jan 1 — First Date ══════════════════ -->
-      <div class="polaroid rot-n2" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-n2" onclick="openScrapbook('e1')" role="button" tabindex="0">
         <div class="tape tape-tl tape-pink" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🎬<br>photo<br>here</div>
@@ -342,7 +426,7 @@
       </div>
 
       <!-- ══ 2 · Jan 8 — Official ═════════════════════ -->
-      <div class="polaroid rot-p3" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-p3" onclick="openScrapbook('e2')" role="button" tabindex="0">
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">♡ official</div>
@@ -356,7 +440,7 @@
       </div>
 
       <!-- ══ 3 · Jan 15 — Mood Coffee ════════════════ -->
-      <div class="polaroid rot-n1" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-n1" onclick="openScrapbook('e3')" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">☕<br>photo<br>here</div>
@@ -369,7 +453,7 @@
       </div>
 
       <!-- ══ 4 · Jan 21 — I Heart Boba ═══════════════ -->
-      <div class="polaroid rot-p1" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-p1" onclick="openScrapbook('e4')" role="button" tabindex="0">
         <div class="tape tape-tr tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🧋<br>photo<br>here</div>
@@ -382,7 +466,7 @@
       </div>
 
       <!-- ══ 5 · Feb 2 — Cookies & Mocha ════════════ -->
-      <div class="polaroid" style="transform:rotate(-6deg);" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid" style="transform:rotate(-6deg);" onclick="openScrapbook('m1')" role="button" tabindex="0">
         <div class="tape tape-tl tape-sage" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪☕</div>
@@ -395,7 +479,7 @@
       </div>
 
       <!-- ══ 6 · Feb 6 — Cookies Again ═══════════════ -->
-      <div class="polaroid" style="transform:rotate(4deg);" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid" style="transform:rotate(4deg);" onclick="openScrapbook('m2')" role="button" tabindex="0">
         <div class="tape tape-tr tape-pink" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-img-placeholder">🍪</div>
@@ -408,7 +492,7 @@
       </div>
 
       <!-- ══ 7 · Feb 10 — First Kiss ═════════════════ -->
-      <div class="polaroid rot-n3" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-n3" onclick="openScrapbook('e5')" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">✨ special</div>
@@ -422,7 +506,7 @@
       </div>
 
       <!-- ══ 8 · Feb 17 — First Photos ═══════════════ -->
-      <div class="polaroid rot-p2" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-p2" onclick="openScrapbook('e6')" role="button" tabindex="0">
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
           <div class="polaroid-badge">📸 us</div>
@@ -436,7 +520,7 @@
       </div>
 
       <!-- ══ 9 · Mar 9 — Chosen Valentine's ══════════ -->
-      <div class="polaroid rot-n1" onclick="openLightbox(this)" role="button" tabindex="0">
+      <div class="polaroid rot-n1" onclick="openScrapbook('e7')" role="button" tabindex="0">
         <div class="tape tape-tl tape-pink"  aria-hidden="true"></div>
         <div class="tape tape-br tape-cream" aria-hidden="true"></div>
         <div class="polaroid-img">
@@ -453,41 +537,206 @@
     </div><!-- /event-grid -->
   </div><!-- /grid-wrap -->
 
-  <!-- Lightbox overlay -->
-  <div class="gallery-overlay" id="gallery-overlay" onclick="handleOverlayClick(event)">
-    <div class="lightbox-card" id="lightbox-card"></div>
+  <!-- Scrapbook overlay -->
+  <div class="scrapbook-overlay" id="scrapbook-overlay" onclick="handleOverlayClick(event)">
+    <div class="scrapbook-page" id="scrapbook-page"></div>
   </div>
 
   <script>
-    let activeCard = null;
+    const eventData = {
+      e1: {
+        date: 'Jan 1, 2026', title: 'first date (at the theaters!!)',
+        desc: 'even if marty was the one under a24 lighting, you were the one who stole the spotlight ♡',
+        emoji: '🎬', badge: null, tape: 'tape-lavender',
+        stickers: [
+          { e:'🍿', top:'6%',  left:'3%',   rot:-14, sz:38 },
+          { e:'🎟️', top:'4%',  right:'4%',  rot: 10, sz:32 },
+          { e:'🌙', bot:'14%', left:'4%',   rot: -8, sz:30 },
+          { e:'⭐', bot:'10%', right:'5%',  rot: 16, sz:26 },
+          { e:'✨', top:'50%', left:'2%',   rot:-20, sz:28 },
+        ],
+        doodles: [
+          { m:'✦', top:'22%', right:'11%', rot: 6,  c:'#c9a89a', sz:16 },
+          { m:'♡', bot:'30%', left:'11%',  rot:-10, c:'#e8a8c8', sz:20 },
+          { m:'★', top:'62%', right:'9%',  rot: 12, c:'#b0c4a0', sz:14 },
+        ],
+      },
+      e2: {
+        date: 'Jan 8, 2026', title: 'became official',
+        desc: "i wanted to repay you for the hersheys you gave me this day but i'm sorry i nearly poisioned you instead ♡",
+        emoji: '🍫', badge: '♡ official', tape: 'tape-cream',
+        stickers: [
+          { e:'💌', top:'5%',  left:'3%',   rot:-12, sz:34 },
+          { e:'🤍', top:'4%',  right:'4%',  rot: 10, sz:30 },
+          { e:'🍬', bot:'13%', left:'5%',   rot: -6, sz:28 },
+          { e:'💝', bot:'10%', right:'5%',  rot: 18, sz:26 },
+        ],
+        doodles: [
+          { m:'♡', top:'25%', right:'10%', rot:-5,  c:'#e8a8c8', sz:20 },
+          { m:'✦', bot:'32%', left:'10%',  rot: 8,  c:'#c9a89a', sz:16 },
+        ],
+      },
+      e3: {
+        date: 'Jan 15, 2026', title: 'Mood Coffee',
+        desc: 'tea too hot + hit the curb. however, it introduced me to hibiscus tea (which i am downing while making this website) so i think it was fire',
+        emoji: '☕', badge: null, tape: 'tape-sage',
+        stickers: [
+          { e:'🌺', top:'5%',  left:'3%',   rot:-10, sz:34 },
+          { e:'🫖', top:'5%',  right:'4%',  rot:  8, sz:30 },
+          { e:'💫', bot:'14%', left:'5%',   rot: 15, sz:28 },
+          { e:'🌸', bot:'11%', right:'5%',  rot:-12, sz:26 },
+        ],
+        doodles: [
+          { m:'★', top:'28%', right:'11%', rot:10,  c:'#c9a89a', sz:15 },
+          { m:'♡', bot:'35%', left:'11%',  rot:-8,  c:'#e8a8c8', sz:18 },
+        ],
+      },
+      e4: {
+        date: 'Jan 21, 2026', title: 'I Heart Boba',
+        desc: 'honey lemon tea (gross)',
+        emoji: '🧋', badge: null, tape: 'tape-pink',
+        stickers: [
+          { e:'🫧', top:'5%',  left:'3%',   rot: -8, sz:32 },
+          { e:'🍋', top:'4%',  right:'4%',  rot: 12, sz:28 },
+          { e:'💛', bot:'13%', left:'5%',   rot: 10, sz:26 },
+          { e:'🌼', bot:'10%', right:'5%',  rot:-15, sz:28 },
+        ],
+        doodles: [
+          { m:'✦', top:'22%', right:'9%',  rot:-5,  c:'#c9a89a', sz:16 },
+          { m:'★', bot:'30%', left:'12%',  rot:12,  c:'#b0c4a0', sz:14 },
+        ],
+      },
+      m1: {
+        date: 'Feb 2, 2026', title: 'cookies & mocha',
+        desc: 'sneaky little coffee date ♡',
+        emoji: '🍪', badge: null, tape: 'tape-cream',
+        stickers: [
+          { e:'☕', top:'5%',  left:'3%',   rot:-14, sz:34 },
+          { e:'🤎', top:'5%',  right:'4%',  rot: 10, sz:30 },
+          { e:'✨', bot:'13%', left:'5%',   rot: -8, sz:26 },
+          { e:'🍫', bot:'10%', right:'5%',  rot: 15, sz:28 },
+        ],
+        doodles: [
+          { m:'♡', top:'28%', right:'10%', rot: 6,  c:'#e8a8c8', sz:18 },
+          { m:'✦', bot:'35%', left:'10%',  rot:-10, c:'#c9a89a', sz:14 },
+        ],
+      },
+      m2: {
+        date: 'Feb 6, 2026', title: 'cookies again',
+        desc: 'we have a type ♡',
+        emoji: '🍪', badge: null, tape: 'tape-pink',
+        stickers: [
+          { e:'🍪', top:'4%',  left:'3%',   rot:-10, sz:38 },
+          { e:'😋', top:'5%',  right:'4%',  rot:  8, sz:32 },
+          { e:'🤍', bot:'12%', left:'5%',   rot: 12, sz:26 },
+          { e:'🌸', bot:'10%', right:'5%',  rot:-14, sz:28 },
+        ],
+        doodles: [
+          { m:'★', top:'25%', right:'11%', rot:-8,  c:'#c9a89a', sz:16 },
+          { m:'♡', bot:'32%', left:'12%',  rot:10,  c:'#e8a8c8', sz:18 },
+        ],
+      },
+      e5: {
+        date: 'Feb 10, 2026', title: 'first kiss',
+        desc: "movies told me first kisses were really bad and awkward so we're just better than the movies ♡",
+        emoji: '💋', badge: '✨ special', tape: 'tape-lavender',
+        stickers: [
+          { e:'🌹', top:'5%',  left:'3%',   rot:-12, sz:34 },
+          { e:'💕', top:'4%',  right:'4%',  rot: 10, sz:32 },
+          { e:'✨', bot:'14%', left:'5%',   rot: -8, sz:28 },
+          { e:'🥀', bot:'11%', right:'5%',  rot: 16, sz:26 },
+          { e:'🫶', top:'50%', left:'2%',   rot:-18, sz:30 },
+        ],
+        doodles: [
+          { m:'♡', top:'22%', right:'10%', rot:-5,  c:'#e8a8c8', sz:22 },
+          { m:'✦', bot:'30%', left:'11%',  rot:12,  c:'#c9a89a', sz:16 },
+          { m:'★', top:'60%', right:'9%',  rot: 8,  c:'#b0c4a0', sz:14 },
+        ],
+      },
+      e6: {
+        date: 'Feb 17, 2026', title: 'First Photos Together',
+        desc: 'our first pictures as a couple. keeping these forever.',
+        emoji: '📷', badge: '📸 us', tape: 'tape-sage',
+        stickers: [
+          { e:'🌸', top:'5%',  left:'3%',   rot:-10, sz:32 },
+          { e:'🎞️', top:'5%',  right:'4%',  rot: 12, sz:30 },
+          { e:'💗', bot:'13%', left:'5%',   rot: -8, sz:28 },
+          { e:'🌷', bot:'10%', right:'5%',  rot: 14, sz:28 },
+        ],
+        doodles: [
+          { m:'✦', top:'26%', right:'12%', rot: 6,  c:'#c9a89a', sz:15 },
+          { m:'♡', bot:'34%', left:'10%',  rot:-10, c:'#e8a8c8', sz:18 },
+        ],
+      },
+      e7: {
+        date: 'Mar 9, 2026', title: "Chosen Valentine's Day",
+        desc: '2 months + 1 day after official. 21 is your favorite number. ♡',
+        emoji: '🌹', badge: '♡ our day', tape: 'tape-pink',
+        stickers: [
+          { e:'💝', top:'5%',  left:'3%',   rot:-12, sz:36 },
+          { e:'🎀', top:'4%',  right:'4%',  rot: 10, sz:32 },
+          { e:'🫶', bot:'13%', left:'5%',   rot: -8, sz:30 },
+          { e:'✨', bot:'10%', right:'5%',  rot: 16, sz:26 },
+          { e:'🌸', top:'48%', right:'2%',  rot:-14, sz:28 },
+        ],
+        doodles: [
+          { m:'♡', top:'20%', right:'11%', rot:-6,  c:'#e8a8c8', sz:22 },
+          { m:'✦', bot:'30%', left:'10%',  rot:10,  c:'#c9a89a', sz:18 },
+          { m:'★', top:'62%', right:'10%', rot: 8,  c:'#b0c4a0', sz:14 },
+        ],
+      },
+    };
 
-    function openLightbox(card) {
-      const overlay     = document.getElementById('gallery-overlay');
-      const lightboxCard = document.getElementById('lightbox-card');
+    function openScrapbook(id) {
+      const d = eventData[id];
+      if (!d) return;
+      const page = document.getElementById('scrapbook-page');
 
-      lightboxCard.innerHTML = '';
-      const clone = card.cloneNode(true);
-      clone.removeAttribute('onclick');
-      clone.removeAttribute('tabindex');
-      lightboxCard.appendChild(clone);
+      // stickers
+      let html = d.stickers.map(s => {
+        let st = `font-size:${s.sz}px;transform:rotate(${s.rot}deg);`;
+        if (s.top) st += `top:${s.top};`;
+        if (s.bot) st += `bottom:${s.bot};`;
+        if (s.left) st += `left:${s.left};`;
+        if (s.right) st += `right:${s.right};`;
+        return `<span class="sb-sticker" style="${st}" aria-hidden="true">${s.e}</span>`;
+      }).join('');
 
-      if (activeCard) activeCard.style.opacity = '';
-      card.style.opacity = '0.35';
-      activeCard = card;
+      // doodles
+      html += d.doodles.map(d => {
+        let st = `font-size:${d.sz}px;transform:rotate(${d.rot}deg);color:${d.c};`;
+        if (d.top) st += `top:${d.top};`;
+        if (d.bot) st += `bottom:${d.bot};`;
+        if (d.left) st += `left:${d.left};`;
+        if (d.right) st += `right:${d.right};`;
+        return `<span class="sb-doodle" style="${st}" aria-hidden="true">${d.m}</span>`;
+      }).join('');
 
-      overlay.classList.add('active');
+      // art
+      html += `<div class="sb-art-wrap">
+        <div class="sb-art-tape ${d.tape}" aria-hidden="true"></div>
+        <span class="sb-emoji">${d.emoji}</span>
+      </div>`;
+
+      // text
+      html += `<div class="sb-date">${d.date}</div>`;
+      if (d.badge) html += `<div><span class="sb-badge">${d.badge}</span></div>`;
+      html += `<div class="sb-title">${d.title}</div>`;
+      html += `<div class="sb-caption">${d.desc}</div>`;
+
+      page.innerHTML = html;
+      document.getElementById('scrapbook-overlay').classList.add('active');
     }
 
-    function closeLightbox() {
-      document.getElementById('gallery-overlay').classList.remove('active');
-      if (activeCard) { activeCard.style.opacity = ''; activeCard = null; }
+    function closeScrapbook() {
+      document.getElementById('scrapbook-overlay').classList.remove('active');
     }
 
     function handleOverlayClick(e) {
-      if (e.target === e.currentTarget) closeLightbox();
+      if (e.target === e.currentTarget) closeScrapbook();
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeScrapbook(); });
     document.querySelectorAll('.polaroid').forEach(card => {
       card.addEventListener('keydown', e => {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
