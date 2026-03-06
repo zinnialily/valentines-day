@@ -192,6 +192,21 @@
       text-transform: uppercase;
     }
 
+    /* photo slideshow */
+    .photo-slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 2px 2px 0 0;
+      opacity: 0;
+      animation: photoFade 8s infinite;
+    }
+    @keyframes photoFade {
+      0%, 5%    { opacity: 1; }
+      25%, 100% { opacity: 0; }
+    }
+
     /* ── Washi tape strips ────────────────────────── */
     .tape {
       position: absolute;
@@ -444,16 +459,16 @@
       <!-- ══ 3 · Jan 15 — Mood Coffee ════════════════ -->
       <div class="polaroid rot-n1" onclick="openScrapbook('e3')" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
-        <div class="polaroid-img">
-          <div class="polaroid-img-placeholder" style="display:flex;gap:10px;align-items:center;justify-content:center;padding:8px;">
+        <div class="polaroid-img" style="background:linear-gradient(135deg,#ff9eb5,#d4a8e8,#8ec8f0);">
+          <div style="width:100%;height:100%;display:flex;gap:10px;align-items:center;justify-content:center;">
             <div style="text-align:center;line-height:1.4;">
-              <span style="font-size:30px;">🌺</span>
-              <div style="font-size:8px;color:#c87080;letter-spacing:1px;margin-top:2px;">hibiscus</div>
+              <span style="font-size:44px;display:block;line-height:1;">🌺</span>
+              <div style="font-size:8px;color:#8b3a50;letter-spacing:1px;margin-top:4px;font-family:Georgia,serif;">hibiscus</div>
             </div>
-            <div style="color:#c8b090;font-size:13px;">+</div>
+            <div style="color:#7a5090;font-size:16px;font-weight:bold;">+</div>
             <div style="text-align:center;line-height:1.4;">
-              <span style="font-size:30px;">🫖</span>
-              <div style="font-size:8px;color:#8090a0;letter-spacing:1px;margin-top:2px;">earl gray</div>
+              <span style="font-size:44px;display:block;line-height:1;">🫖</span>
+              <div style="font-size:8px;color:#3a5870;letter-spacing:1px;margin-top:4px;font-family:Georgia,serif;">earl gray</div>
             </div>
           </div>
         </div>
@@ -481,8 +496,11 @@
       <!-- ══ 5 · Feb 2 — Cookies & Mocha ════════════ -->
       <div class="polaroid" style="transform:rotate(-6deg);" onclick="openScrapbook('m1')" role="button" tabindex="0">
         <div class="tape tape-tl tape-sage" aria-hidden="true"></div>
-        <div class="polaroid-img">
-          <div class="polaroid-img-placeholder">🍪☕</div>
+        <div class="polaroid-img" style="background:linear-gradient(135deg,#3d1f0a,#6b3a1f,#4a2810);padding:0;">
+          <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <div style="font-size:46px;line-height:1;">🍪</div>
+            <div style="font-size:46px;line-height:1;">☕</div>
+          </div>
         </div>
         <div class="polaroid-body">
           <div class="polaroid-date">Feb 2, 2026</div>
@@ -491,20 +509,7 @@
         </div>
       </div>
 
-      <!-- ══ 6 · Feb 6 — Cookies Again ═══════════════ -->
-      <div class="polaroid" style="transform:rotate(4deg);" onclick="openScrapbook('m2')" role="button" tabindex="0">
-        <div class="tape tape-tr tape-pink" aria-hidden="true"></div>
-        <div class="polaroid-img">
-          <div class="polaroid-img-placeholder">🍪</div>
-        </div>
-        <div class="polaroid-body">
-          <div class="polaroid-date">Feb 6, 2026</div>
-          <div class="polaroid-title">cookies again</div>
-          <div class="polaroid-desc">we have a type ♡</div>
-        </div>
-      </div>
-
-      <!-- ══ 7 · Feb 10 — First Kiss ═════════════════ -->
+      <!-- ══ 6 · Feb 10 — First Kiss ═════════════════ -->
       <div class="polaroid rot-n3" onclick="openScrapbook('e5')" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img" style="background:#1a1a2e;flex-direction:column;gap:6px;">
@@ -522,20 +527,37 @@
         </div>
       </div>
 
-      <!-- ══ 8 · Feb 17 — First Photos ═══════════════ -->
+      <!-- ══ 7 · Feb 17 — First Photos ═══════════════ -->
       <div class="polaroid rot-p2" onclick="openScrapbook('e6')" role="button" tabindex="0">
         <div class="tape tape-tr tape-cream" aria-hidden="true"></div>
-        <div class="polaroid-img" style="padding:0;display:grid;grid-template-columns:1fr 1fr;gap:2px;overflow:hidden;">
+        <div class="polaroid-img" style="padding:0;position:relative;">
           <div class="polaroid-badge">📸 us</div>
-          <img src="k1.JPG" style="width:100%;height:100%;object-fit:cover;">
-          <img src="k2.JPG" style="width:100%;height:100%;object-fit:cover;">
-          <img src="k3.JPG" style="width:100%;height:100%;object-fit:cover;">
-          <img src="k4.JPG" style="width:100%;height:100%;object-fit:cover;">
+          <img src="k1.JPG" class="photo-slide" style="animation-delay:0s;">
+          <img src="k2.JPG" class="photo-slide" style="animation-delay:2s;">
+          <img src="k3.JPG" class="photo-slide" style="animation-delay:4s;">
+          <img src="k4.JPG" class="photo-slide" style="animation-delay:6s;">
         </div>
         <div class="polaroid-body">
           <div class="polaroid-date">Feb 17, 2026</div>
           <div class="polaroid-title">First Photos Together</div>
           <div class="polaroid-desc">our first pictures as a couple. keeping these forever.</div>
+        </div>
+      </div>
+
+      <!-- ══ 8 · Mar 4 — Unexpected Plaza Date ═══════ -->
+      <div class="polaroid rot-n2" onclick="openScrapbook('p1')" role="button" tabindex="0">
+        <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
+        <div class="polaroid-img" style="background:linear-gradient(160deg,#1a1430,#2a1e48,#1a2030);flex-direction:column;gap:6px;">
+          <div class="polaroid-badge">🌬️ plaza</div>
+          <div style="text-align:center;">
+            <div style="font-size:36px;line-height:1;filter:drop-shadow(0 0 8px rgba(200,176,224,0.5));">🌬️🫶</div>
+            <div style="font-size:8px;color:rgba(200,176,224,0.7);letter-spacing:2px;margin-top:6px;font-family:Georgia,serif;font-style:italic;">wind was blowing</div>
+          </div>
+        </div>
+        <div class="polaroid-body">
+          <div class="polaroid-date">Mar 4, 2026</div>
+          <div class="polaroid-title">unexpected plaza date</div>
+          <div class="polaroid-desc">"yo let me drive you somewhere" ended up being the plaza near my house. wind was blowing, we were holding hands. it was perfect ♡</div>
         </div>
       </div>
 
@@ -645,21 +667,6 @@
           { m:'✦', bot:'35%', left:'10%',  rot:-10, c:'#c9a89a', sz:14 },
         ],
       },
-      m2: {
-        date: 'Feb 6, 2026', title: 'cookies again',
-        desc: 'we have a type ♡',
-        emoji: '🍪', badge: null, tape: 'tape-pink',
-        stickers: [
-          { e:'🍪', top:'4%',  left:'3%',   rot:-10, sz:38 },
-          { e:'😋', top:'5%',  right:'4%',  rot:  8, sz:32 },
-          { e:'🤍', bot:'12%', left:'5%',   rot: 12, sz:26 },
-          { e:'🌸', bot:'10%', right:'5%',  rot:-14, sz:28 },
-        ],
-        doodles: [
-          { m:'★', top:'25%', right:'11%', rot:-8,  c:'#c9a89a', sz:16 },
-          { m:'♡', bot:'32%', left:'12%',  rot:10,  c:'#e8a8c8', sz:18 },
-        ],
-      },
       e5: {
         date: 'Feb 10, 2026', title: 'first kiss',
         desc: "movies told me first kisses were really bad and awkward so we're just better than the movies ♡",
@@ -690,6 +697,21 @@
         doodles: [
           { m:'✦', top:'26%', right:'12%', rot: 6,  c:'#c9a89a', sz:15 },
           { m:'♡', bot:'34%', left:'10%',  rot:-10, c:'#e8a8c8', sz:18 },
+        ],
+      },
+      p1: {
+        date: 'Mar 4, 2026', title: 'unexpected plaza date',
+        desc: '"yo let me drive you somewhere" ended up being the plaza near my house. wind was blowing, we were holding hands. it was perfect ♡',
+        emoji: '🌬️', badge: '🌬️ plaza', tape: 'tape-lavender', customArt: 'plaza',
+        stickers: [
+          { e:'🌬️', top:'5%',  left:'3%',   rot:-10, sz:32 },
+          { e:'🫶', top:'4%',  right:'4%',  rot: 10, sz:30 },
+          { e:'🌙', bot:'13%', left:'5%',   rot: -8, sz:28 },
+          { e:'✨', bot:'10%', right:'5%',  rot: 14, sz:26 },
+        ],
+        doodles: [
+          { m:'♡', top:'28%', right:'10%', rot:-6,  c:'#c8b0e0', sz:20 },
+          { m:'✦', bot:'35%', left:'10%',  rot:10,  c:'#c9a89a', sz:14 },
         ],
       },
       e7: {
@@ -770,12 +792,17 @@
           </div>
         </div>`;
       } else if (d.customArt === 'jenga') {
-        const block = `<div style="width:38px;height:14px;background:#e8dfc0;border:1px solid #c8b880;border-radius:2px;box-shadow:inset 0 1px 2px rgba(255,255,255,0.45),0 1px 2px rgba(0,0,0,0.18);flex-shrink:0;"></div>`;
-        const gap   = `<div style="width:38px;height:14px;flex-shrink:0;"></div>`;
+        const horizBlock = `<div style="width:36px;height:13px;background:#eddfc4;border:1px solid #c8b880;border-radius:2px;box-shadow:inset 0 1px 2px rgba(255,255,255,0.5),0 1px 2px rgba(0,0,0,0.15);flex-shrink:0;"></div>`;
+        const horizGap   = `<div style="width:36px;height:13px;flex-shrink:0;"></div>`;
+        const wideBlock  = `<div style="width:118px;height:13px;background:#e0d0b0;border:1px solid #b8a870;border-radius:2px;box-shadow:inset 0 1px 2px rgba(255,255,255,0.4),0 1px 2px rgba(0,0,0,0.15);"></div>`;
         let rows = '';
         for (let r = 0; r < 9; r++) {
-          const missing = r === 4;
-          rows += `<div style="display:flex;gap:3px;">${block}${missing ? gap : block}${block}</div>`;
+          if (r % 2 === 0) {
+            const missing = r === 4;
+            rows += `<div style="display:flex;gap:3px;">${horizBlock}${missing ? horizGap : horizBlock}${horizBlock}</div>`;
+          } else {
+            rows += `<div style="display:flex;">${wideBlock}</div>`;
+          }
         }
         html += `<div class="sb-art-wrap">
           <div class="sb-art-tape ${d.tape}" aria-hidden="true"></div>
@@ -810,6 +837,18 @@
               <span style="font-size:64px;display:block;line-height:1;">🫖</span>
               <span style="font-size:9px;letter-spacing:2px;color:#708090;margin-top:6px;display:block;font-family:Georgia,serif;">EARL GRAY</span>
             </div>
+          </div>
+        </div>`;
+      } else if (d.customArt === 'plaza') {
+        html += `<div class="sb-art-wrap">
+          <div class="sb-art-tape ${d.tape}" aria-hidden="true"></div>
+          <div style="position:relative;width:320px;height:180px;background:linear-gradient(160deg,#0f0a20,#1a1438,#0f1828);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+            <div style="font-size:44px;filter:drop-shadow(0 0 10px rgba(200,176,224,0.6));">🌬️🫶</div>
+            <div style="font-size:9px;color:rgba(200,176,224,0.7);letter-spacing:2px;font-family:Georgia,serif;font-style:italic;">wind was blowing · holding hands</div>
+            <div style="position:absolute;top:12px;left:16px;color:rgba(220,200,240,0.3);font-size:8px;">★</div>
+            <div style="position:absolute;top:20px;right:20px;color:rgba(220,200,240,0.25);font-size:6px;">✦</div>
+            <div style="position:absolute;top:14px;right:52px;color:rgba(220,200,240,0.2);font-size:10px;">★</div>
+            <div style="position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:8px;color:rgba(200,176,224,0.5);letter-spacing:3px;font-family:Georgia,serif;">it was perfect</div>
           </div>
         </div>`;
       } else {
