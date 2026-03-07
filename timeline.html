@@ -200,11 +200,11 @@
       object-fit: cover;
       border-radius: 2px 2px 0 0;
       opacity: 0;
-      animation: photoFade 8s infinite;
+      animation: photoFade 8.5s infinite;
     }
     @keyframes photoFade {
-      0%, 5%    { opacity: 1; }
-      25%, 100% { opacity: 0; }
+      0%, 24%   { opacity: 1; }
+      30%, 100% { opacity: 0; }
     }
 
     /* ── Washi tape strips ────────────────────────── */
@@ -489,7 +489,7 @@
         <div class="polaroid-body">
           <div class="polaroid-date">Jan 21, 2026</div>
           <div class="polaroid-title">I Heart Boba</div>
-          <div class="polaroid-desc">honey lemon tea (gross)</div>
+          <div class="polaroid-desc">honey lemon tea = crime against boba + jenga chaos 🏗️</div>
         </div>
       </div>
 
@@ -548,10 +548,10 @@
       <div class="polaroid rot-n2" onclick="openScrapbook('p1')" role="button" tabindex="0">
         <div class="tape tape-tl tape-lavender" aria-hidden="true"></div>
         <div class="polaroid-img" style="background:linear-gradient(160deg,#1a1430,#2a1e48,#1a2030);flex-direction:column;gap:6px;">
-          <div class="polaroid-badge">🌬️ plaza</div>
+          <div class="polaroid-badge">🎲 surprise</div>
           <div style="text-align:center;">
-            <div style="font-size:36px;line-height:1;filter:drop-shadow(0 0 8px rgba(200,176,224,0.5));">🌬️🫶</div>
-            <div style="font-size:8px;color:rgba(200,176,224,0.7);letter-spacing:2px;margin-top:6px;font-family:Georgia,serif;font-style:italic;">wind was blowing</div>
+            <div style="font-size:36px;line-height:1;filter:drop-shadow(0 0 8px rgba(200,176,224,0.5));">🚗💨🌃</div>
+            <div style="font-size:8px;color:rgba(200,176,224,0.7);letter-spacing:2px;margin-top:6px;font-family:Georgia,serif;font-style:italic;">yo let me drive you somewhere</div>
           </div>
         </div>
         <div class="polaroid-body">
@@ -639,7 +639,7 @@
       },
       e4: {
         date: 'Jan 21, 2026', title: 'I Heart Boba',
-        desc: 'honey lemon tea (gross)',
+        desc: 'honey lemon tea was genuinely undrinkable (who approved that flavor??) but the jenga tower of doom? we ate 🏗️',
         emoji: '🧋', badge: null, tape: 'tape-pink', customArt: 'jenga',
         stickers: [
           { e:'🫧', top:'5%',  left:'3%',   rot: -8, sz:32 },
@@ -654,7 +654,7 @@
       },
       m1: {
         date: 'Feb 2, 2026', title: 'cookies & mocha',
-        desc: 'sneaky little coffee date ♡',
+        desc: 'both of these were hella goated thank you ♡',
         emoji: '🍪', badge: null, tape: 'tape-cream',
         stickers: [
           { e:'☕', top:'5%',  left:'3%',   rot:-14, sz:34 },
@@ -702,11 +702,11 @@
       p1: {
         date: 'Mar 4, 2026', title: 'unexpected plaza date',
         desc: '"yo let me drive you somewhere" ended up being the plaza near my house. wind was blowing, we were holding hands. it was perfect ♡',
-        emoji: '🌬️', badge: '🌬️ plaza', tape: 'tape-lavender', customArt: 'plaza',
+        emoji: '🚗', badge: '🎲 surprise', tape: 'tape-lavender', customArt: 'plaza',
         stickers: [
-          { e:'🌬️', top:'5%',  left:'3%',   rot:-10, sz:32 },
-          { e:'🫶', top:'4%',  right:'4%',  rot: 10, sz:30 },
-          { e:'🌙', bot:'13%', left:'5%',   rot: -8, sz:28 },
+          { e:'🚗', top:'5%',  left:'3%',   rot:-10, sz:32 },
+          { e:'🎲', top:'4%',  right:'4%',  rot: 10, sz:30 },
+          { e:'🌃', bot:'13%', left:'5%',   rot: -8, sz:28 },
           { e:'✨', bot:'10%', right:'5%',  rot: 14, sz:26 },
         ],
         doodles: [
@@ -843,8 +843,8 @@
         html += `<div class="sb-art-wrap">
           <div class="sb-art-tape ${d.tape}" aria-hidden="true"></div>
           <div style="position:relative;width:320px;height:180px;background:linear-gradient(160deg,#0f0a20,#1a1438,#0f1828);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
-            <div style="font-size:44px;filter:drop-shadow(0 0 10px rgba(200,176,224,0.6));">🌬️🫶</div>
-            <div style="font-size:9px;color:rgba(200,176,224,0.7);letter-spacing:2px;font-family:Georgia,serif;font-style:italic;">wind was blowing · holding hands</div>
+            <div style="font-size:44px;filter:drop-shadow(0 0 10px rgba(200,176,224,0.6));">🚗💨🌃</div>
+            <div style="font-size:9px;color:rgba(200,176,224,0.7);letter-spacing:2px;font-family:Georgia,serif;font-style:italic;">yo let me drive you somewhere</div>
             <div style="position:absolute;top:12px;left:16px;color:rgba(220,200,240,0.3);font-size:8px;">★</div>
             <div style="position:absolute;top:20px;right:20px;color:rgba(220,200,240,0.25);font-size:6px;">✦</div>
             <div style="position:absolute;top:14px;right:52px;color:rgba(220,200,240,0.2);font-size:10px;">★</div>
