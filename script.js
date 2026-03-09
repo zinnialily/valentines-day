@@ -1,4 +1,4 @@
-const CORRECT_PASSWORD = 'your-password-here';
+const CORRECT_PASSWORD = '010826';
 const TIMELINE_PAGE = 'timeline.html';
 const ERROR_MESSAGE_DURATION = 3000;
 
