@@ -14,7 +14,7 @@ The site has two pages:
 
 ## Theme
 
-> *Toothless (Night Fury) × Light Fury — Cozy Viking Village Edition*
+> *Toothless (Night Fury) × Light Fury
 
 The landing page renders a full-viewport sunset scene:
 - Deep purple-to-amber gradient sky
