@@ -1,6 +1,5 @@
-# Our Story ♡
-
-A password-protected, interactive Valentine's Day scrapbook website themed after *How to Train Your Dragon*. Built as a personal gift — a digital keepsake of shared memories presented as a cozy Viking village at sunset.
+# Our Story
+A password-protected, interactive Valentine's Day scrapbook website themed after *How to Train Your Dragon*. A digital keepsake of our shared memories, presented as a cozy Viking village at sunset.
 
 ---
 
@@ -9,7 +8,7 @@ A password-protected, interactive Valentine's Day scrapbook website themed after
 The site has two pages:
 
 1. **Landing page** (`index.html`) — A HTTYD-themed entrance scene with animated dragons, mountain silhouettes, floating embers, and a password gate.
-2. **Timeline gallery** (`timeline.html`) — A horizontal-scrolling scrapbook of polaroid cards documenting moments in the relationship, complete with washi tape, doodles, and a lightbox overlay.
+2. **Timeline gallery** (`timeline.html`) — A horizontal-scrolling scrapbook of polaroid cards documenting our moments together, complete with washi tape, doodles, and a lightbox overlay.
 
 ---
 
@@ -35,7 +34,7 @@ index.html  →  password prompt  →  (correct)  →  timeline.html
                                    (wrong)     →  shake + error message
 ```
 
-The password is the couple's anniversary date (`MMDDYY` format). The error messages are intentionally playful.
+The password is our anniversary date in `MMDDYY` format (010826). The error messages are intentionally playful.
 
 ---
 
@@ -61,9 +60,7 @@ valentines-day/
 ├── script.js           # Password validation + redirect logic
 ├── timeline.html       # Self-contained scrapbook gallery (inline styles + JS)
 ├── beginning.html      # (empty placeholder)
-├── *.jpeg / *.JPG      # Photo assets used in polaroid cards
-└── docs/
-    └── plans/          # Design decision records for major redesigns
+└── *.jpeg / *.JPG      # Photo assets used in polaroid cards
 ```
 
 ---
@@ -80,15 +77,15 @@ python3 -m http.server 8080
 
 ---
 
-## Design Decisions
+## Design Journey
 
-Key design choices are documented in `docs/plans/`:
+I built this with several design iterations in mind:
 
-| File | Decision |
-|---|---|
-| `2026-02-22-scrapbook-timeline-design.md` | Replaced straight timeline line with wavy SVG path + absolute-positioned polaroids |
-| `2026-02-23-gallery-redesign-design.md` | Replaced SVG wave with CSS grid gallery + lightbox overlay |
-| `2026-02-23-gallery-redesign.md` | Gallery redesign implementation notes |
+- **Original wave timeline** — Started with a straight timeline line, then tried a wavy SVG path with absolutely-positioned polaroids
+- **Grid gallery transition** — Replaced the SVG wave approach with a CSS grid-based masonry gallery for better card distribution and responsiveness
+- **Interactive lightbox** — Added a modal overlay to showcase full photo captions when cards are clicked
+
+Each transition kept the same HTTYD aesthetic while improving the layout and user experience.
 
 ---
 
