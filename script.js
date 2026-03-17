@@ -15,14 +15,14 @@ function handlePasswordSubmit(event) {
     const enteredPassword = passwordInput.value.trim();
 
     if (!enteredPassword) {
-        showError('enter the magic word');
+        showError('enter the magic number (also the same as ur current password)');
         return;
     }
 
     if (enteredPassword === CORRECT_PASSWORD) {
         redirectToTimeline();
     } else {
-        showError('yo how do u mistype gg');
+        showError('yo how do u mistype gg my cute boy');
         passwordInput.value = '';
         passwordInput.focus();
     }
